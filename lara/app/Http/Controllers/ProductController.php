@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Http\Requests\ProductRequest;
 
 class ProductController extends Controller
 {
-    public function create(Product $request)
+    public function create(ProductRequest $request)
     {
         $product = Product::create($request->all());
 

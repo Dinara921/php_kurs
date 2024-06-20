@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
+use App\Http\Requests\OrderDetailRequest;
 
 class OrderDetailController extends Controller
 {
-    public function create(OrderDetail $request)
+    public function create(OrderDetailRequest $request)
     {
         $orderDetail = OrderDetail::create($request->all());
 

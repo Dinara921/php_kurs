@@ -15,17 +15,17 @@ class Product extends Model
         return $this->hasMany(OrderDetail::class);
     }
   
-    public function category_id()
+    public function category()
     {
         return $this->belongsTo(CategoryProduct::class);
     }
 
-    public function country_id()
+    public function country()
     {
         return $this->belongsTo(CountryProduct::class);
     }
     
-    public function sale_id()
+    public function sale()
     {
         return $this->belongsTo(Sale::class);
     }

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 use App\Models\CategoryProduct;
 use Illuminate\Http\Request;
+use App\Http\Requests\CategoryProductRequest;
 
 class CategoryProductController extends Controller
 {
-      public function create(CategoryProduct $request)
+      public function create(CategoryProductRequest $request)
     {
         $categoryProduct = CategoryProduct::create($request->all());
 

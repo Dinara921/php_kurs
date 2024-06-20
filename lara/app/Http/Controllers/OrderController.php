@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Http\Requests\OrderRequest;
 
 class OrderController extends Controller
 {
-    public function create(Order $request)
+    public function create(OrderRequest $request)
     {
         $order = Order::create($request->all());
 

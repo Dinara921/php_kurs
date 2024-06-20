@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\SaleRequest;
 use App\Models\Sale;
+
 class SaleController extends Controller
 {
-     public function create(Sale $request)
+     public function create(SaleRequest $request)
     {
         $sale = Sale::create($request->all());
 

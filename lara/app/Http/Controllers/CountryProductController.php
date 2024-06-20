@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 use App\Models\CountryProduct;
 use Illuminate\Http\Request;
+use App\Http\Requests\CountryProductRequest;
 
 class CountryProductController extends Controller
 {
-    public function create(CountryProduct $request)
+    public function create(CountryProductRequest $request)
     {
         $countryProduct = CountryProduct::create($request->all());
 

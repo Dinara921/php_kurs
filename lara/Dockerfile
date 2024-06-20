@@ -1,25 +1,40 @@
-FROM php:8.0-fpm
+# Стадия для PHP
+FROM php:8.3-fpm
 
-# Устанавливаем системные зависимости
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    && docker-php-ext-install pdo pdo_pgsql
+# Копируем конфигурационные файлы
+COPY docker.conf /usr/local/etc/php-fpm.d/
+COPY .bashrc /root/
+
+# Устанавливаем необходимые зависимости
+RUN apt-get update \
+    && apt-get install -y build-essential zlib1g-dev default-mysql-client curl gnupg procps vim git unzip libzip-dev libpq-dev \
+    && docker-php-ext-install zip pdo_mysql pdo_pgsql pgsql
+
+# Устанавливаем и конфигурируем intl
+RUN apt-get install -y libicu-dev \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install intl
+
+# Устанавливаем и конфигурируем gd
+RUN apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev \
+    && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
+    && docker-php-ext-install gd
+
+# Устанавливаем pcov и включаем его
+RUN pecl install pcov && docker-php-ext-enable pcov
 
 # Устанавливаем Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php composer-setup.php \
+    && php -r "unlink('composer-setup.php');" \
+    && mv composer.phar /usr/local/bin/composer
 
-# Копируем локальные файлы
-WORKDIR /var/www
-COPY . .
+# Настройки Composer
+ENV COMPOSER_ALLOW_SUPERUSER 1
+ENV COMPOSER_HOME /composer
+ENV PATH $PATH:/composer/vendor/bin
+RUN composer config --global process-timeout 3600 \
+    && composer global require "laravel/installer"
 
-# Настройка прав доступа
-RUN chown -R www-data:www-data /var/www
-
-# Установка зависимостей проекта
-RUN composer install
-
-# Очистка кэша
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-
-EXPOSE 9000
-CMD ["php-fpm"]
+# Устанавливаем рабочую директорию
+WORKDIR /var/www/html
