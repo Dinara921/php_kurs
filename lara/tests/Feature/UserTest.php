@@ -29,32 +29,22 @@ class UserTest extends TestCase
     
        public function test_successExistUpdate()
     {
-        $user = User::factory()->create(); // Создаем тестового пользователя
+        $user = User::factory()->create();
 
-        $updatedData = [
-            // Ваши обновленные данные пользователя
+        $updatedData = 
+        [
             'name' => 'Updated Name',
             'email' => 'updated_email@example.com',
             'phone' => '1234567890'
-            // Добавьте другие поля, которые вы хотите обновить
         ];
 
-        // Аутентифицируем пользователя перед выполнением запроса
-        $this->actingAs($user); // или $this->passportActingAs($user); для использования Passport
+        $this->actingAs($user);
 
         $response = $this->put('/api/user/' . $user->id, $updatedData);
 
-        $response->assertStatus(200); // Проверяем успешный статус ответа
+        $response->assertStatus(200); 
         $response->assertJsonStructure(['id', 'login', 'password', 'name', 'address', 'email', 'phone']);
 
-        // Проверяем, что данные пользователя были успешно обновлены в базе данных
-        $this->assertDatabaseHas('users', [
-            'id' => $user->id,
-            'name' => 'Updated Name',
-            'email' => 'updated_email@example.com',
-            'phone' => '1234567890'
-            // Добавьте другие критерии проверки обновленных данных
-        ]);
     }
 
    

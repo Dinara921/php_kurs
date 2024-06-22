@@ -11,7 +11,7 @@ class UserController extends Controller
     {
         $user = User::create($request->all());
 
-        //dd($user);
+        //dd($user);  
         return response()->json($user,201);
     }
 
