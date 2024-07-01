@@ -16,13 +16,13 @@ class UserFactory extends Factory
      */
     public function definition()
     {
-        return [
-            'login' => $this->faker->userName,
-            'password' => bcrypt('password'), 
-            'name' => $this->faker->name,
-            'address' => $this->faker->address,
-            'email' => $this->faker->unique()->safeEmail,
-            'phone' => $this->faker->numberBetween(1000000000, 2147483647)
-        ];
+         return [
+        'login' => $this->faker->regexify('[A-Za-z0-9]{1,9}'),
+        'password' => bcrypt('password'), 
+        'name' => $this->faker->name,
+        'address' => $this->faker->address,
+        'email' => $this->faker->unique()->safeEmail,
+        'phone' => $this->faker->numberBetween(1000000000, 2147483647)
+         ];
     }
 }

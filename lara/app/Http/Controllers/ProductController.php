@@ -6,38 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Http\Requests\ProductRequest;
 
-class ProductController extends Controller
+class ProductController extends BaseController
 {
-    public function create(ProductRequest $request)
-    {
-        $product = Product::create($request->all());
+    protected $model = Product::class;
 
-        //dd($product);
-        return response()->json($product,201);
-    }
-
-    public function item($id)
+    protected function getValidationRules()
     {
-        //dd($id);
-        $product = Product::with('products')->findOrFail($id);
-        return response()->json($product,200);
-    }
-    public function list(Request $request)
-    {
-        $product = Product::where('id', '>', 2)->paginate(5);
-        return response()->json($product, 200);
-    }
-
-    public function update(Request $request, $id)
-    {
-          $product = Product::findOrFail($id);
-          $product -> update($request->all());
-          return response()->json($product, 200);
-    }
-     public function delete($id)
-    {
-          $product = Product::findOrFail($id);
-          $product->delete();
-          return response()->json($product, 204);
+         return (new ProductRequest())->rules();
     }
 }

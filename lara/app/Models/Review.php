@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Review extends Model
 {
     use HasFactory;
-    protected $fillable = ['products_id', 'user_id', 'text', 'grade'];
+    protected $fillable = ['products_id', 'user_id', 'order_id', 'text', 'grade'];
 
     public function product()
     {
@@ -17,5 +17,9 @@ class Review extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
 }

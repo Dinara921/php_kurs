@@ -5,39 +5,42 @@ use App\Models\User;
 use Illuminate\Http\Requests;
 use App\Http\Requests\UserRequest;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
-    public function create(UserRequest $request)
-    {
-        $user = User::create($request->all());
+    protected $model = User::class;
 
-        //dd($user);  
-        return response()->json($user,201);
-    }
-
-    public function item($id)
+    protected function getValidationRules()
     {
-        //dd($id);
-        $user = User::findOrFail($id);
-        return response()->json($user,200);
+         return (new UserRequest())->rules();
     }
 
-    public function list(UserRequest $request)
-    {
-        $users = User::where('id', '>', 2)->paginate(5);
-        return response()->json($users, 200);
-    }
+    // public function register(UserRequest $request)
+    // {
+    //     // Валидация запроса
+    //     $validatedData = $request->validated();
 
-    public function update(UserRequest $request, $id)
-    {
-          $user = User::findOrFail($id);
-          $user -> update($request->all());
-          return response()->json($user, 200);
-    }
-     public function delete($id)
-    {
-          $user = User::findOrFail($id);
-          $user->delete();
-          return response()->json($user, 204);
-    }
+    //     // Создание пользователя
+    //     $user = User::create([
+    //         'login' => $validatedData['login'],
+    //         'password' => Hash::make($validatedData['password']),
+    //         'name' => $validatedData['name'],
+    //         'address' => $validatedData['address'],
+    //         'email' => $validatedData['email'],
+    //         'phone' => $validatedData['phone'],
+    //     ]);
+
+    //     // Создание клиента Passport, если его еще нет
+    //     $client = Client::where('password_client', true)->first();
+
+    //     // Генерация API токена для пользователя
+    //     $tokenResult = $user->createToken('Personal Access Token', [$client->id]);
+    //     $token = $tokenResult->accessToken;
+
+    //     // Возвращение ответа с данными пользователя и сгенерированным токеном
+    //     return response()->json([
+    //         'message' => 'User registered successfully',
+    //         'user' => $user,
+    //         'access_token' => $token,
+    //     ], 201);
+    // }
 }

@@ -5,38 +5,12 @@ use App\Models\CategoryProduct;
 use Illuminate\Http\Request;
 use App\Http\Requests\CategoryProductRequest;
 
-class CategoryProductController extends Controller
+class CategoryProductController extends BaseController
 {
-      public function create(CategoryProductRequest $request)
-    {
-        $categoryProduct = CategoryProduct::create($request->all());
+    protected $model = CategoryProduct::class;
 
-        //dd($order);
-        return response()->json($categoryProduct,201);
-    }
-
-    public function item($id)
+    protected function getValidationRules()
     {
-        //dd($id);
-        $categoryProduct = CategoryProduct::with('categoryProducts')->findOrFail($id);
-        return response()->json($categoryProduct,200);
-    }
-    public function list(Request $request)
-    {
-        $categoryProduct = CategoryProduct::where('id', '>', 2)->paginate(5);
-        return response()->json($categoryProduct, 200);
-    }
-
-    public function update(Request $request, $id)
-    {
-          $categoryProduct = CategoryProduct::findOrFail($id);
-          $categoryProduct -> update($request->all());
-          return response()->json($categoryProduct, 200);
-    }
-     public function delete($id)
-    {
-          $categoryProduct = CategoryProduct::findOrFail($id);
-          $categoryProduct->delete();
-          return response()->json($categoryProduct, 204);
+         return (new CategoryProductRequest())->rules();
     }
 }

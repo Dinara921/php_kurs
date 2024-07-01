@@ -113,3 +113,10 @@ Route::get('/categoryProducts', [CategoryProductController::class, 'list']);
 Route::put('/categoryProduct/{id}', [CategoryProductController::class, 'update']);
 
 Route::delete('/categoryProduct/{id}', [CategoryProductController::class, 'delete']);
+
+
+Route::post('/register', [AuthController::class, 'register']);
+
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::post('/logout', [AuthController::class, 'logout']);

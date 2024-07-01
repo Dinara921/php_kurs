@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('country_products', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->uniqid();
             $table->timestamps();
         });
     }

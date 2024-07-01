@@ -23,11 +23,10 @@ class SaleRequest extends FormRequest
      */
     public function rules()
     {
-        return 
-        [
-            'name' => 'required|string|max:50', 
-            'discount' => 'required|integer', 
-            'expired_at' => 'required|date'
+        return [
+            'name' => 'required|string|max:250',
+            'discount' => 'required|integer',
+            'expired_at' => 'required|date',
         ];
     }
 }

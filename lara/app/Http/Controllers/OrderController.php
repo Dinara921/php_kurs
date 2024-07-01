@@ -5,38 +5,12 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Requests\OrderRequest;
 
-class OrderController extends Controller
+class OrderController extends BaseController
 {
-    public function create(OrderRequest $request)
-    {
-        $order = Order::create($request->all());
+    protected $model = Order::class;
 
-        //dd($order);
-        return response()->json($order,201);
-    }
-
-    public function item($id)
+    protected function getValidationRules()
     {
-        //dd($id);
-        $order = Order::with('orders')->findOrFail($id);
-        return response()->json($order,200);
-    }
-    public function list(Request $request)
-    {
-        $order = Order::where('id', '>', 2)->paginate(5);
-        return response()->json($order, 200);
-    }
-
-    public function update(Request $request, $id)
-    {
-          $order = Order::findOrFail($id);
-          $order -> update($request->all());
-          return response()->json($order, 200);
-    }
-     public function delete($id)
-    {
-          $order = Order::findOrFail($id);
-          $order->delete();
-          return response()->json($order, 204);
+         return (new OrderRequest())->rules();
     }
 }

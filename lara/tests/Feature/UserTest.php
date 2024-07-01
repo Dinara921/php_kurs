@@ -17,68 +17,128 @@ class UserTest extends TestCase
         $response->assertStatus(200);
     }
 
-    // public function test_successExistUserById()
-    // {
-    //     $user = User::factory()->create();
-
-    //     $response = $this->get('/api/user/' . $user->id);
-
-    //     $response->assertStatus(200);
-    //     $response->assertJsonStructure(['id', 'login', 'password', 'name', 'address', 'email', 'phone']);
-    // }
-    
-       public function test_successExistUpdate()
+    public function test_successExistUserById()
     {
         $user = User::factory()->create();
 
-        $updatedData = 
-        [
-            'name' => 'Updated Name',
-            'email' => 'updated_email@example.com',
-            'phone' => '1234567890'
-        ];
+        $response = $this->get('/api/user/' . $user->id);
 
-        $this->actingAs($user);
+        $response->assertStatus(200);
+        $response->assertJsonStructure(['id', 'login', 'password', 'name', 'address', 'email', 'phone']);
+    }
+    
+    public function test_NotExistUserById()
+    {
+        $user = User::all()->last();
+        //dd($user->id+1);
+        $response = $this->get('/api/user/'.$user->id+1);
+
+        $response->assertStatus(404);
+        //$response->assertJsonStructure(['id', 'login', 'password', 'name', 'address', 'email', 'phone']);
+    }
+
+    public function test_successExistUpdate()
+    {
+        $user = User::factory()->create();
+
+        $updatedData = User::factory()->make()->toArray();
+        //dd($updatedData);
+
+        $updatedData['password'] = 'STEP2024';
 
         $response = $this->put('/api/user/' . $user->id, $updatedData);
 
         $response->assertStatus(200); 
         $response->assertJsonStructure(['id', 'login', 'password', 'name', 'address', 'email', 'phone']);
-
     }
 
+    public function test_NotExistUpdate()
+    {
+        $user = User::factory()->create();
+
+        $updatedData = User::factory()->make()->toArray();
+        //dd($updatedData);
+        $this->withHeaders([
+            'Accept' => 'application/json'
+        ]);
+
+        $response = $this->put('/api/user/' . $user->id, $updatedData);
+         
+        $response->assertStatus(422); 
+    }
    
-    // public function test_successExistDelete()
-    // {
-    //     $user = User::factory()->create();
+    public function test_NotExistDelete()
+    {
+        $user = User::all()->last();
+        $response = $this->delete('/api/user/' . $user->id+1);
 
-    //     $response = $this->delete('/api/user/' . $user->id);
+        $response->assertStatus(404); 
+    }
 
-    //     $response->assertStatus(204); 
-    //     $this->assertDatabaseMissing('users', ['id' => $user->id]);
-    // }
+    public function test_successExistDelete()
+    {
+        $user = User::factory()->create();
 
+        $response = $this->delete('/api/user/' . $user->id);
+
+        $response->assertStatus(204); 
+        $this->assertDatabaseMissing('users', ['id' => $user->id]);
+    }
 
    public function test_fakeAddUser()
     {
-        $faker = \Faker\Factory::create();
+         $userData = User::factory()->raw([
+        'login' => 'secret',
+        'password' => 'secret', 
+        ]);
 
-        $newUserData = [
-            'login' => $faker->unique()->userName,
-            'password' => 'pass123',
-            'name' => $faker->name,
-            'address' => $faker->address,
-            'email' => $faker->unique()->safeEmail,
-            'phone' => $faker->numerify('##########'),
+        $response = $this->post('/api/user', $userData);
+
+        if ($response->status() === 302) 
+        {
+            $response->dump();
+        }
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('users', 
+        [
+            'login' => $userData['login'],
+            'email' => $userData['email'],
+        ]);
+    }
+
+    public function test_createUserValidation()
+    {
+        $userData = [
+            'login' => 'shortlogin',
+            'email' => 'sdsdddsdsd',
+            'password' => 'short123456877889788',
+            'name' => 'Test User',
+            'address' => '123 Test St',
+            'phone' => '1234567890'
         ];
 
-        $response = $this->post('/api/user', $newUserData);
+        $this->withHeaders([
+            'Accept' => 'application/json'
+        ]);
+        
+        $response = $this->post('/api/user', $userData);
 
         $response->assertStatus(422); 
-        $response->assertJsonValidationErrors(['id', 'login', 'password', 'name', 'address', 'email', 'phone']);
+    }
 
-        // Проверяем, что пользователь не был добавлен в базу данных
-        $this->assertDatabaseMissing('users', ['email' => $newUserData['email']]);
+    public function test_getAllUsers()
+    {
+        $this->withHeaders([
+            'Accept' => 'application/json'
+        ]);
+
+        $expectedCount = User::count();
+
+        $response = $this->get('/api/users');
+
+        $response->assertStatus(200);
+        $response->assertJsonCount($expectedCount);
     }
 }
 
