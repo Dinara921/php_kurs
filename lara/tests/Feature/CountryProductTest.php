@@ -94,7 +94,7 @@ class CountryProductTest extends TestCase
     {
         $countryProduct = CountryProduct::factory()->create();
 
-        $response = $this->post('/api/countryProduct', $countryProduct);
+        $response = $this->post('/api/countryProduct/', $countryProduct->toArray());
 
         if ($response->status() === 302) 
         {
