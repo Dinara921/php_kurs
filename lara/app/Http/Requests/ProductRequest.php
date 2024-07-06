@@ -23,8 +23,9 @@ class ProductRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'nullable|integer', 
+        return 
+        [
+            'name' => 'nullable|string|min:5', 
             'category_id' => 'required|integer', 
             'country_id' => 'nullable|integer', 
             'img' => 'nullable|string', 

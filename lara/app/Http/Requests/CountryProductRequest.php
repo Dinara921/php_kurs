@@ -23,7 +23,8 @@ class CountryProductRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        return 
+        [
            'name' => 'required|string|max:100'
         ];
     }

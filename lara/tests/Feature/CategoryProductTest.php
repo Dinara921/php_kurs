@@ -20,7 +20,8 @@ class CategoryProductTest extends TestCase
 
         $response->assertStatus(200);
     }
-     public function test_successExistCategoryProductById()
+    
+    public function test_successExistCategoryProductById()
     {
         $categoryProduct = CategoryProduct::factory()->create();
 
@@ -73,7 +74,7 @@ class CategoryProductTest extends TestCase
     public function test_NotExistDelete()
     {
         $categoryProduct = CategoryProduct::all()->last();
-        $response = $this->delete('/api/countryProduct/' . $categoryProduct->id+1);
+        $response = $this->delete('/api/countryProduct/' . $categoryProduct->id+100);
 
         $response->assertStatus(404); 
     }

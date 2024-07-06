@@ -23,7 +23,8 @@ class OrderDetailRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        return 
+        [
             'products_id' => 'required|integer'  
             'count' => 'required|integer', 
             'order_id' => 'required|integer',

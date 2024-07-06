@@ -75,7 +75,7 @@ class CountryProductTest extends TestCase
     public function test_NotExistDelete()
     {
         $countryProduct = CountryProduct::all()->last();
-        $response = $this->delete('/api/countryProduct/' . $countryProduct->id+1);
+        $response = $this->delete('/api/countryProduct/' . $countryProduct->id+100);
 
         $response->assertStatus(404); 
     }

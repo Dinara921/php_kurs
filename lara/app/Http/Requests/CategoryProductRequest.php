@@ -23,7 +23,8 @@ class CategoryProductRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        return 
+        [
             'name' => 'required|string|max:100', 
             'category_id' => 'nullable|integer',
         ];

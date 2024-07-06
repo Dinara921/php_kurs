@@ -17,9 +17,9 @@ class SaleFactory extends Factory
     public function definition()
     {
         return [
-        'name' => $this->faker->name,
-        'discount' => $this->faker->discount,
-        'expired_at' => $this->faker->date
+            'name' => $this->faker->regexify('[A-Za-z0-9]{5,250}'), 
+            'discount' => $this->faker->numberBetween(10, 90),
+            'expired_at' => $this->faker->dateTimeBetween('now', '+1 year')->format('Y-m-d H:i:s'),
         ];
     }
 }

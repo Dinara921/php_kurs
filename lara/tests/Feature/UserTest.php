@@ -43,8 +43,7 @@ class UserTest extends TestCase
 
         $updatedData = User::factory()->make()->toArray();
         //dd($updatedData);
-
-        $updatedData['password'] = 'STEP2024';
+        $updatedData['password'] = 'STEP20242';
 
         $response = $this->put('/api/user/' . $user->id, $updatedData);
 
@@ -88,8 +87,8 @@ class UserTest extends TestCase
    public function test_fakeAddUser()
     {
          $userData = User::factory()->raw([
-        'login' => 'secret',
-        'password' => 'secret', 
+        'login' => 'secret1',
+        'password' => 'secret128', 
         ]);
 
         $response = $this->post('/api/user', $userData);
@@ -111,7 +110,7 @@ class UserTest extends TestCase
     {
         $userData = [
             'login' => 'shortlogin',
-            'email' => 'sdsdddsdsd',
+            'email' => 'sdsdddsds',
             'password' => 'short123456877889788',
             'name' => 'Test User',
             'address' => '123 Test St',

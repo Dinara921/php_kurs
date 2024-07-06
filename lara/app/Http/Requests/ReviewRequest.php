@@ -23,7 +23,8 @@ class ReviewRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        return 
+        [
             'product_id' => 'required|integer', 
             'user_id' => 'required|integer', 
             'text' => 'required|string:max:1000', 

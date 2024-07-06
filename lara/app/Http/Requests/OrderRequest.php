@@ -23,10 +23,11 @@ class OrderRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'status' => 'required|integer'  
-            'user_id' => 'required|integer', 
-            'summa' => 'required|integer'
+        return 
+        [
+            'status' => 'required|integer|max:1'  
+            'users_id' => 'required|integer', 
+            'summa' => 'required|integer',
         ];
     }
 }

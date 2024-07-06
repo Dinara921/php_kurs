@@ -23,13 +23,14 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
-        return [ 
-            'login' => 'required|string|max:10', 
-            'password' => 'required|string|max:12', 
-            'name' => 'nullable|string', 
-            'address' => 'required|string|max:255',  
-            'email' => 'nullable|string', 
-            'phone' => 'nullable|integer' 
+        return 
+        [ 
+             'login' => 'required|string|min:5|max:10', 
+             'password' => 'required|string|min:8|max:20', 
+             'name' => 'nullable|string', 
+             'address' => 'required|string|max:255',  
+             'email' => 'nullable|string|email', 
+             'phone' => 'nullable|numeric'  
         ]; 
     }
 }
