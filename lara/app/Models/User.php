@@ -9,15 +9,24 @@ use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, HasApiTokens;
+    use HasFactory, Notifiable;
     protected $fillable = ['login', 'password', 'name', 'address', 'email', 'phone'];
 
     public function order()
     {
         return $this->hasMany(Order::class);
     }
-    public function reviews()
+    public function review()
     {
         return $this->hasMany(Review::class);
     }
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
 }

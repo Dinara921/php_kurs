@@ -20,9 +20,10 @@ class OrderFactory extends Factory
     {
         $userIds = User::pluck('id')->toArray();
 
-        return [
+        return 
+        [
             'status' => $this->faker->numberBetween(1, 4),
-            'users_id' => $this->faker->randomElement($userIds),
+            'user_id' => $this->faker->randomElement($userIds),
             'summa' => $this->faker->numberBetween
         ];
     }

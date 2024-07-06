@@ -17,7 +17,7 @@ return new class extends Migration
         {
             $table->id();
             $table->integer('products_id');
-            $table->integer('users_id');
+            $table->integer('user_id');
             $table->integer('order_id');
             $table->string('text');
             $table->integer('grade');

@@ -19,23 +19,38 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request)
     {
-        $credentials = $request->only('login', 'password');
+        public function register(CreateUserRequest $request)
+        {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
-        if (!Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'User registered successfully', 'user' => $user], 201);
         }
 
-        $user = Auth::user();
-        $client = Client::where('password_client', true)->first();
+        public function login(LoginRequest $request)
+        {
+            $credentials = $request->only('email', 'password');
 
-        $tokenResult = $user->createToken('Personal Access Token', [$client->id]);
-        $token = $tokenResult->accessToken;
+            if (!Auth::attempt($credentials)) {
+                throw ValidationException::withMessages([
+                    'email' => ['The provided credentials are incorrect.'],
+                ]);
+            }
 
-        return response()->json([
-            'message' => 'Login successful',
-            'user' => $user,
-            'access_token' => $token,
-        ], 200);
+            $user = Auth::user();
+
+            return response()->json(['message' => 'Login successful', 'user' => $user], 200);
+        }
+
+        public function logout()
+        {
+            Auth::logout();
+
+            return response()->json(['message' => 'Logged out'], 200);
+        }
     }
 
     /**

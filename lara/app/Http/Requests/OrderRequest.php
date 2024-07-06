@@ -25,8 +25,8 @@ class OrderRequest extends FormRequest
     {
         return 
         [
-            'status' => 'required|integer|max:1'  
-            'users_id' => 'required|integer', 
+            'status' => 'required|integer|between:1,4',  
+            'user_id' => 'required|integer', 
             'summa' => 'required|integer',
         ];
     }
