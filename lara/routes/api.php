@@ -117,6 +117,6 @@ Route::delete('/categoryProduct/{id}', [CategoryProductController::class, 'delet
 
 Route::post('register', [UserController::class, 'register']);
 
-Route::post('login', [AuthController::class, 'login']);
+Route::post('login', [UserController::class, 'login']);
 
-Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('logout', [UserController::class, 'logout'])->middleware('auth:sanctum');

@@ -16,13 +16,14 @@ class UserController extends BaseController
 
     protected function register(UserRequest $request)
     {
-        //TODO Условия в классе реквесте на уникальность    
+        //TODO Условия в классе реквесте на уникальность
+
         //TODO Брать пароль в реквесте и кодировать
         $userData = $request->all();
         $userData ['password'] = bcrypt($request);
+        //TODO Сохранить пользователя в базу
         $item = $this->model::create($userData);
         return response()->json($item, 201);
-        //TODO Сохранить пользователя в базу
     }
 
     protected function login(LoginRequest $request)
@@ -50,33 +51,20 @@ class UserController extends BaseController
         
     }
 
-    // public function register(UserRequest $request)
-    // {
-    //     // Валидация запроса
-    //     $validatedData = $request->validated();
+    protected function logout(LoginRequest $request)
+    {
+        $userData = $request->all();
 
-    //     // Создание пользователя
-    //     $user = User::create([
-    //         'login' => $validatedData['login'],
-    //         'password' => Hash::make($validatedData['password']),
-    //         'name' => $validatedData['name'],
-    //         'address' => $validatedData['address'],
-    //         'email' => $validatedData['email'],
-    //         'phone' => $validatedData['phone'],
-    //     ]);
+        $item = $this->model::where('email', $userData['email'])->first();
 
-    //     // Создание клиента Passport, если его еще нет
-    //     $client = Client::where('password_client', true)->first();
+        if (!$item || !Hash::check($userData['password'], $item->password)) 
+        {
+            throw new PasswordNotCorrect();
+        }
 
-    //     // Генерация API токена для пользователя
-    //     $tokenResult = $user->createToken('Personal Access Token', [$client->id]);
-    //     $token = $tokenResult->accessToken;
+        $item->token = null; 
+        $item->save();
 
-    //     // Возвращение ответа с данными пользователя и сгенерированным токеном
-    //     return response()->json([
-    //         'message' => 'User registered successfully',
-    //         'user' => $user,
-    //         'access_token' => $token,
-    //     ], 201);
-    // }
+        return response()->json(['message' => 'Logout successful'], 200);
+    }
 }
