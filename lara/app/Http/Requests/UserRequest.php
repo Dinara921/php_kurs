@@ -25,11 +25,10 @@ class UserRequest extends FormRequest
     {
         return 
         [ 
-             'login' => 'required|string|min:5|max:10', 
+             'email' => 'required|string|email|unique:users,email',
              'password' => 'required|string|min:8|max:20', 
              'name' => 'nullable|string', 
              'address' => 'required|string|max:255',  
-             'email' => 'nullable|string|email', 
              'phone' => 'nullable|numeric'  
         ]; 
     }

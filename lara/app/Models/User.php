@@ -3,21 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
-    protected $fillable = ['login', 'password', 'name', 'address', 'email', 'phone'];
+    use HasApiTokens, HasFactory, Notifiable;
 
-    public function order()
+    protected $fillable = ['email', 'password', 'name', 'address', 'phone', 'token'];
+
+    public function orders()  
     {
         return $this->hasMany(Order::class);
     }
-    public function review()
-    {
+
+    public function reviews()  {
         return $this->hasMany(Review::class);
     }
 

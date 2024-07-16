@@ -24,7 +24,7 @@ class UserTest extends TestCase
         $response = $this->get('/api/user/' . $user->id);
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(['id', 'login', 'password', 'name', 'address', 'email', 'phone']);
+        $response->assertJsonStructure(['id', 'email', 'name', 'address', 'phone']);
     }
     
     public function test_NotExistUserById()
@@ -34,7 +34,7 @@ class UserTest extends TestCase
         $response = $this->get('/api/user/'.$user->id+1);
 
         $response->assertStatus(404);
-        //$response->assertJsonStructure(['id', 'login', 'password', 'name', 'address', 'email', 'phone']);
+        //$response->assertJsonStructure(['id', 'email', 'name', 'address', 'phone', 'token']);
     }
 
     public function test_successExistUpdate()
@@ -48,7 +48,7 @@ class UserTest extends TestCase
         $response = $this->put('/api/user/' . $user->id, $updatedData);
 
         $response->assertStatus(200); 
-        $response->assertJsonStructure(['id', 'login', 'password', 'name', 'address', 'email', 'phone']);
+        $response->assertJsonStructure(['id', 'email', 'name', 'address', 'phone']);
     }
 
     public function test_NotExistUpdate()
@@ -86,14 +86,12 @@ class UserTest extends TestCase
 
    public function test_fakeAddUser()
     {
-         $userData = User::factory()->raw([
-        'login' => 'secret1',
-        'password' => 'secret128', 
-        ]);
+        $userData = User::factory()->make()->toArray();
 
+        $userData['password'] = 'STEPJJHJHJ12';
         $response = $this->post('/api/user', $userData);
 
-        if ($response->status() === 302) 
+        if ($response->status() !== 201)
         {
             $response->dump();
         }
@@ -101,7 +99,6 @@ class UserTest extends TestCase
         $response->assertStatus(201);
         $this->assertDatabaseHas('users', 
         [
-            'login' => $userData['login'],
             'email' => $userData['email'],
         ]);
     }
@@ -109,9 +106,7 @@ class UserTest extends TestCase
     public function test_createUserValidation()
     {
         $userData = [
-            'login' => 'shortlogin',
-            'email' => 'sdsdddsds',
-            'password' => 'short123456877889788',
+            'email' => 'sdsdddsds@fgf.ru',
             'name' => 'Test User',
             'address' => '123 Test St',
             'phone' => '1234567890'
