@@ -25,7 +25,7 @@ class OrderDetailRequest extends FormRequest
     {
         return 
         [
-            'products_id' => 'required|integer',  
+            'product_id' => 'required|integer',  
             'count' => 'required|integer', 
             'order_id' => 'required|integer',
             'price' => 'required|integer'

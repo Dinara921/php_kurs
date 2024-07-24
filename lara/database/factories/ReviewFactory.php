@@ -24,7 +24,7 @@ class ReviewFactory extends Factory
         $orderIds = Order::pluck('id')->toArray();
         return 
         [
-            'products_id' => $this->faker->randomElement($productIds),
+            'product_id' => $this->faker->randomElement($productIds),
             'user_id' => $this->faker->randomElement($userIds),
             'order_id' => $this->faker->randomElement($orderIds),
             'text' => $this->faker->text,

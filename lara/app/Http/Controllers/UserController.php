@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Requests;
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\LoginRequest;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserController extends BaseController
 {
@@ -20,7 +23,7 @@ class UserController extends BaseController
 
         //TODO Брать пароль в реквесте и кодировать
         $userData = $request->all();
-        $userData ['password'] = bcrypt($request);
+        $userData ['password'] = Hash::make($userData['password']);
         //TODO Сохранить пользователя в базу
         $item = $this->model::create($userData);
         return response()->json($item, 201);
@@ -31,24 +34,21 @@ class UserController extends BaseController
         //TODO искать пользователя почте
         $userData = $request->all();
         //TODO Брать пароль в реквесте и кодировать
-        $userData['password'] = bcrypt($request);
         //TODO Сравнить кодированный пароль и пароль в базе 
-        $item = $this->model::where('email', 'like' $userData[email]);
+        $item = $this->model::where('email', 'like', $userData['email'])->first();
         //TODO При успешном условии генерировать случайный токен
-        if($item->password !== $userData['password'])
+
+        if(Hash::check($userData['password'], $item->password) == false)
         {
             throw new PasswordNotCorrect();
         }
 
-        $token = str_random(30);
+        $token = Str::random(30);
 
         $item->token = $token;
         $item->save();
         return $item;
-        
-        
-        return response()->json($item, 201);
-        
+        return response()->json($item, 201);  
     }
 
     protected function logout(LoginRequest $request)

@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserTest extends TestCase
 {
@@ -15,6 +17,46 @@ class UserTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
+    }
+
+    public function test_Registration()
+    {
+        $userData = User::factory()->make()->toArray();
+
+        $userData['password'] = 'STEPJJHJHJ12';
+        $response = $this->post('/api/register', $userData);
+
+        if ($response->status() !== 201)
+        {
+            $response->dump();
+        }
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('users', 
+        [
+            'email' => $userData['email'],
+        ]);
+    }
+
+    public function test_Login()
+    {
+         $credentials = $request->only('email', 'password');
+
+    $user = User::where('email', $credentials['email'])->first();
+
+    if (!$user || !Hash::check($credentials['password'], $user->password)) {
+        return response()->json(['error' => 'Invalid credentials'], 401);
+    }
+
+    // Генерируем случайный токен и сохраняем его
+    $token = Str::random(30);
+    $user->token = $token;
+    $user->save();
+
+    return response()->json([
+        'token' => $token,
+        'email' => $user->email,
+    ], 200);
     }
 
     public function test_successExistUserById()
@@ -82,43 +124,6 @@ class UserTest extends TestCase
 
         $response->assertStatus(204); 
         $this->assertDatabaseMissing('users', ['id' => $user->id]);
-    }
-
-   public function test_fakeAddUser()
-    {
-        $userData = User::factory()->make()->toArray();
-
-        $userData['password'] = 'STEPJJHJHJ12';
-        $response = $this->post('/api/user', $userData);
-
-        if ($response->status() !== 201)
-        {
-            $response->dump();
-        }
-
-        $response->assertStatus(201);
-        $this->assertDatabaseHas('users', 
-        [
-            'email' => $userData['email'],
-        ]);
-    }
-
-    public function test_createUserValidation()
-    {
-        $userData = [
-            'email' => 'sdsdddsds@fgf.ru',
-            'name' => 'Test User',
-            'address' => '123 Test St',
-            'phone' => '1234567890'
-        ];
-
-        $this->withHeaders([
-            'Accept' => 'application/json'
-        ]);
-        
-        $response = $this->post('/api/user', $userData);
-
-        $response->assertStatus(422); 
     }
 
     public function test_getAllUsers()

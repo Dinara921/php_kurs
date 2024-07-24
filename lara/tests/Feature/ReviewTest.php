@@ -27,7 +27,7 @@ class ReviewTest extends TestCase
         $response = $this->get('/api/review/' . $review->id);
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(['products_id', 'user_id', 'order_id', 'text', 'grade']);
+        $response->assertJsonStructure(['product_id', 'user_id', 'order_id', 'text', 'grade']);
     }
     
     public function test_NotExistReviewById()
@@ -37,7 +37,7 @@ class ReviewTest extends TestCase
         $response = $this->get('/api/review/'.$review->id+1);
 
         $response->assertStatus(404);
-        //$response->assertJsonStructure(['products_id', 'user_id', 'order_id', 'text', 'grade']);
+        //$response->assertJsonStructure(['product_id', 'user_id', 'order_id', 'text', 'grade']);
     }
 
     public function test_successExistUpdate()
@@ -50,7 +50,7 @@ class ReviewTest extends TestCase
         $response = $this->put('/api/review/' . $review->id, $updatedData);
 
         $response->assertStatus(200); 
-        $response->assertJsonStructure(['products_id', 'user_id', 'order_id', 'text', 'grade']);
+        $response->assertJsonStructure(['product_id', 'user_id', 'order_id', 'text', 'grade']);
     }
 
     public function test_NotExistUpdate()
@@ -100,7 +100,7 @@ class ReviewTest extends TestCase
         }
 
         $response->assertStatus(201);
-        $response->assertJsonStructure(['products_id', 'user_id', 'order_id', 'text', 'grade']);
+        $response->assertJsonStructure(['product_id', 'user_id', 'order_id', 'text', 'grade']);
     }
 
     public function test_createReviewValidation()

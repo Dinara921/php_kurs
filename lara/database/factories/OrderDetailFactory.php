@@ -24,7 +24,7 @@ class OrderDetailFactory extends Factory
         $orderIds = Order::pluck('id')->toArray();
         return 
         [
-            'products_id' => $this->faker->randomElement($productIds),
+            'product_id' => $this->faker->randomElement($productIds),
             'count' => $this->faker->numberBetween,
             'order_id' => $this->faker->randomElement($orderIds),
             'price' => $this->faker->numberBetween

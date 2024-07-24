@@ -28,7 +28,7 @@ class OrderDetailTest extends TestCase
         $response = $this->get('/api/orderDetail/' . $orderDetail->id);
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(['products_id', 'count', 'order_id', 'price']);
+        $response->assertJsonStructure(['product_id', 'count', 'order_id', 'price']);
     }
     
     public function test_NotExistOrderDetailById()
@@ -38,7 +38,7 @@ class OrderDetailTest extends TestCase
         $response = $this->get('/api/orderDetail/'.$orderDetail->id+1);
 
         $response->assertStatus(404);
-        //$response->assertJsonStructure(['products_id', 'count', 'order_id', 'price']);
+        //$response->assertJsonStructure(['product_id', 'count', 'order_id', 'price']);
     }
 
     public function test_successExistUpdate()
@@ -51,7 +51,7 @@ class OrderDetailTest extends TestCase
         $response = $this->put('/api/orderDetail/' . $orderDetail->id, $updatedData);
 
         $response->assertStatus(200); 
-        $response->assertJsonStructure(['products_id', 'count', 'order_id', 'price']);
+        $response->assertJsonStructure(['product_id', 'count', 'order_id', 'price']);
     }
 
     public function test_NotExistUpdate()
@@ -101,7 +101,7 @@ class OrderDetailTest extends TestCase
         }
 
         $response->assertStatus(201);
-        $response->assertJsonStructure(['products_id', 'count', 'order_id', 'price']);
+        $response->assertJsonStructure(['product_id', 'count', 'order_id', 'price']);
     }
 
     public function test_createOrderDetailValidation()

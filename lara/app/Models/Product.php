@@ -17,12 +17,12 @@ class Product extends Model
   
     public function category()
     {
-        return $this->belongsTo(CategoryProduct::class);
+        return $this->belongsTo(Category::class);
     }
 
     public function country()
     {
-        return $this->belongsTo(CountryProduct::class);
+        return $this->belongsTo(Country::class);
     }
     
     public function sale()

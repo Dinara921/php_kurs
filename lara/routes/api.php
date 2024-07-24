@@ -8,8 +8,8 @@ use App\Http\Controllers\SaleController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderDetailController;
-use App\Http\Controllers\CountryProductController;
-use App\Http\Controllers\CategoryProductController;
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +27,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request)
     return $request->user();
 });
 
-Route::post('/user', [UserController::class, 'create']);
+Route::post('register', [UserController::class, 'register']);
+
+Route::post('login', [UserController::class, 'login']);
+
+Route::post('logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::get('/user/{id}', [UserController::class, 'item']);
 
@@ -93,30 +97,23 @@ Route::put('/orderDetail/{id}', [OrderDetailController::class, 'update']);
 Route::delete('/orderDetail/{id}', [OrderDetailController::class, 'delete']);
 
 
-Route::post('/countryProduct', [CountryProductController::class, 'create']);
+Route::post('/country', [CountryController::class, 'create']);
 
-Route::get('/countryProduct/{id}', [CountryProductController::class, 'item']);
+Route::get('/country/{id}', [CountryController::class, 'item']);
 
-Route::get('/countryProducts', [CountryProductController::class, 'list']);
+Route::get('/countries', [CountryController::class, 'list']);
 
-Route::put('/countryProduct/{id}', [CountryProductController::class, 'update']);
+Route::put('/country/{id}', [CountryController::class, 'update']);
 
-Route::delete('/countryProduct/{id}', [CountryProductController::class, 'delete']);
-
-
-Route::post('/categoryProduct', [CategoryProductController::class, 'create']);
-
-Route::get('/categoryProduct/{id}', [CategoryProductController::class, 'item']);
-
-Route::get('/categoryProducts', [CategoryProductController::class, 'list']);
-
-Route::put('/categoryProduct/{id}', [CategoryProductController::class, 'update']);
-
-Route::delete('/categoryProduct/{id}', [CategoryProductController::class, 'delete']);
+Route::delete('/country/{id}', [CountryController::class, 'delete']);
 
 
-Route::post('register', [UserController::class, 'register']);
+Route::post('/category', [CategoryController::class, 'create']);
 
-Route::post('login', [UserController::class, 'login']);
+Route::get('/category/{id}', [CategoryController::class, 'item']);
 
-Route::post('logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
+Route::get('/categories', [CategoryController::class, 'list']);
+
+Route::put('/category/{id}', [CategoryController::class, 'update']);
+
+Route::delete('/category/{id}', [CategoryController::class, 'delete']);
