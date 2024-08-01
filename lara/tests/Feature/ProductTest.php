@@ -29,7 +29,7 @@ class ProductTest extends TestCase
         $response = $this->get('/api/product/' . $product->id);
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(['id', 'name', 'category_id', 'country_id', 'img', 'sale_id', 'count', 'price']);
+        $response->assertJsonStructure(['id', 'name', 'category_id', 'country_id', 'overview', 'img', 'sale_id', 'count', 'price']);
     }
     
     public function test_NotExistProductById()
@@ -39,7 +39,7 @@ class ProductTest extends TestCase
         $response = $this->get('/api/product/'.$product->id+1);
 
         $response->assertStatus(404);
-        //$response->assertJsonStructure(['id', 'name', 'category_id', 'country_id', 'img', 'sale_id', 'count', 'price']);
+        //$response->assertJsonStructure(['id', 'name', 'category_id', 'country_id', 'overview', 'img', 'sale_id', 'count', 'price']);
     }
 
     public function test_successExistUpdate()
@@ -52,7 +52,7 @@ class ProductTest extends TestCase
         $response = $this->put('/api/product/' . $product->id, $updatedData);
 
         $response->assertStatus(200); 
-        $response->assertJsonStructure(['id', 'name', 'category_id', 'country_id', 'img', 'sale_id', 'count', 'price']);
+        $response->assertJsonStructure(['id', 'name', 'category_id', 'country_id', 'overview', 'img', 'sale_id', 'count', 'price']);
     }
 
     public function test_NotExistUpdate()
@@ -102,7 +102,7 @@ class ProductTest extends TestCase
         }
 
         $response->assertStatus(201);
-        $response->assertJsonStructure(['id', 'name', 'category_id', 'country_id', 'img', 'sale_id', 'count', 'price']);
+        $response->assertJsonStructure(['id', 'name', 'category_id', 'country_id', 'overview', 'img', 'sale_id', 'count', 'price']);
     }
 
     public function test_createProductValidation()
@@ -129,6 +129,62 @@ class ProductTest extends TestCase
         $expectedCount = Product::count();
 
         $response = $this->get('/api/products');
+
+        $response->assertStatus(200);
+        $response->assertJsonCount($expectedCount);
+    }
+
+    public function test_getSortingAcsName()
+    {
+        $this->withHeaders([
+            'Accept' => 'application/json'
+        ]);
+
+        $expectedCount = Product::count();
+
+        $response = $this->get('/api/productsN');
+
+        $response->assertStatus(200);
+        $response->assertJsonCount($expectedCount);
+    }
+
+    public function test_getSortingDescName()
+    {
+        $this->withHeaders([
+            'Accept' => 'application/json'
+        ]);
+
+        $expectedCount = Product::count();
+
+        $response = $this->get('/api/productsNm');
+
+        $response->assertStatus(200);
+        $response->assertJsonCount($expectedCount);
+    }
+
+    public function test_getSortingAcsPrice()
+    {
+        $this->withHeaders([
+            'Accept' => 'application/json'
+        ]);
+
+        $expectedCount = Product::count();
+
+        $response = $this->get('/api/productsP');
+
+        $response->assertStatus(200);
+        $response->assertJsonCount($expectedCount);
+    }
+
+    public function test_getSortingDescPrice()
+    {
+        $this->withHeaders([
+            'Accept' => 'application/json'
+        ]);
+
+        $expectedCount = Product::count();
+
+        $response = $this->get('/api/productsPr');
 
         $response->assertStatus(200);
         $response->assertJsonCount($expectedCount);

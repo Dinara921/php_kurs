@@ -10,6 +10,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderDetailController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SortingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,6 +74,15 @@ Route::get('/products', [ProductController::class, 'list']);
 Route::put('/product/{id}', [ProductController::class, 'update']);
 
 Route::delete('/product/{id}', [ProductController::class, 'delete']);
+
+
+Route::get('/productsN', [SortingController::class, 'sortingAscName']);
+
+Route::get('/productsNm', [SortingController::class, 'sortingDescName']);
+
+Route::get('/productsP', [SortingController::class, 'sortingAscPrice']);
+
+Route::get('/productsPr', [SortingController::class, 'sortingDescPrice']);
 
 
 Route::post('/order', [OrderController::class, 'create']);

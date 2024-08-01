@@ -38,27 +38,6 @@ class UserTest extends TestCase
         ]);
     }
 
-    public function test_Login()
-    {
-         $credentials = $request->only('email', 'password');
-
-    $user = User::where('email', $credentials['email'])->first();
-
-    if (!$user || !Hash::check($credentials['password'], $user->password)) {
-        return response()->json(['error' => 'Invalid credentials'], 401);
-    }
-
-    // Генерируем случайный токен и сохраняем его
-    $token = Str::random(30);
-    $user->token = $token;
-    $user->save();
-
-    return response()->json([
-        'token' => $token,
-        'email' => $user->email,
-    ], 200);
-    }
-
     public function test_successExistUserById()
     {
         $user = User::factory()->create();

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('name');
             $table->integer('category_id');
             $table->integer('country_id')->nullable(true);
+            $table->string('overview');
             $table->string('img');
             $table->integer('sale_id')->nullable(true);
             $table->integer('count')->default(0);

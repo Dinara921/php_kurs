@@ -29,6 +29,7 @@ class ProductFactory extends Factory
             'name' => $this->faker->name,
             'category_id' => $this->faker->randomElement($categoryIds),
             'country_id' => $this->faker->randomElement($countryIds),
+            'overview' => $this->faker->text,
             'img' => $this->faker->text,
             'sale_id' => $this->faker->randomElement($saleIds),
             'count' => $this->faker->numberBetween,

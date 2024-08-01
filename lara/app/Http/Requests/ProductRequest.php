@@ -27,7 +27,8 @@ class ProductRequest extends FormRequest
         [
             'name' => 'nullable|string|min:5', 
             'category_id' => 'required|integer', 
-            'country_id' => 'nullable|integer', 
+            'country_id' => 'nullable|integer',
+            'overview' =>  'nullable|string|min:5',
             'img' => 'nullable|string', 
             'sale_id' => 'nullable|integer',  
             'count' => 'required|integer', 
