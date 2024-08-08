@@ -28,11 +28,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request)
     return $request->user();
 });
 
-Route::post('register', [UserController::class, 'register']);
+Route::post('/register', [UserController::class, 'register']);
 
-Route::post('login', [UserController::class, 'login']);
+Route::post('/login', [UserController::class, 'login']);
 
-Route::post('logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('/logout', [UserController::class, 'logout']);
 
 Route::get('/user/{id}', [UserController::class, 'item']);
 
@@ -41,6 +41,8 @@ Route::get('/users', [UserController::class, 'list']);
 Route::put('/user/{id}', [UserController::class, 'update']);
 
 Route::delete('/user/{id}', [UserController::class, 'delete']);
+
+Route::get('/userId', [UserController::class, 'getUserIdByToken']);
 
 
 Route::post('/sale', [SaleController::class, 'create']);
@@ -90,6 +92,8 @@ Route::post('/order', [OrderController::class, 'create']);
 Route::get('/order/{id}', [OrderController::class, 'item']);
 
 Route::get('/orders', [OrderController::class, 'list']);
+
+Route::get('/orders/{userId}', [OrderController::class, 'getOrdersForUser']);
 
 Route::put('/order/{id}', [OrderController::class, 'update']);
 

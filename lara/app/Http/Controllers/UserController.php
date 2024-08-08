@@ -5,6 +5,7 @@ use App\Models\User;
 use Illuminate\Http\Requests;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\UserIdRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -47,24 +48,54 @@ class UserController extends BaseController
 
         $item->token = $token;
         $item->save();
-        return $item;
-        return response()->json($item, 201);  
+        return response()->json(['user' => $item, 'token' => $token], 200);
     }
 
-    protected function logout(LoginRequest $request)
+    public function logout(LoginRequest $request)
     {
-        $userData = $request->all();
+        $token = $request->bearerToken();
 
-        $item = $this->model::where('email', $userData['email'])->first();
+        \Log::info('Token received for logout:', ['token' => $token]);
 
-        if (!$item || !Hash::check($userData['password'], $item->password)) 
-        {
-            throw new PasswordNotCorrect();
+        if (!$token) {
+            return response()->json(['message' => 'No token provided'], 400);
         }
 
-        $item->token = null; 
-        $item->save();
+        try {
+            $user = User::where('token', $token)->first();
 
-        return response()->json(['message' => 'Logout successful'], 200);
+            if (!$user) {
+                \Log::info('No user found with token:', ['token' => $token]);
+                return response()->json(['message' => 'Invalid token'], 400);
+            }
+
+            $user->token = null;
+            $user->save();
+
+            return response()->json(['message' => 'Logout successful'], 200);
+        } catch (\Exception $e) {
+            \Log::error('Logout error: ' . $e->getMessage());
+            return response()->json(['message' => 'Server error'], 500);
+        }
+    }
+
+    public function getUserIdByToken(UserIdRequest $request)
+    {
+        $token = $request->input('token');
+
+        \Log::info('Token received:', ['token' => $token]);
+
+        if (!$token) {
+            return response()->json(['message' => 'No token provided'], 400);
+        }
+
+        $user = User::where('token', $token)->first();
+
+        if (!$user) {
+            \Log::info('No user found with token:', ['token' => $token]);
+            return response()->json(['message' => 'Invalid token'], 400);
+        }
+
+        return response()->json(['user_id' => $user->id], 200);
     }
 }

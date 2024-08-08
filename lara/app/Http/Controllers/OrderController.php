@@ -13,4 +13,13 @@ class OrderController extends BaseController
     {
          return (new OrderRequest())->rules();
     }
+
+    public function getOrdersForUser($userId)
+    {
+        $orders = Order::where('user_id', $userId)->get();
+        
+        $openOrder = $orders->firstWhere('status', 1);
+
+        return response()->json($openOrder);
+    }
 }
