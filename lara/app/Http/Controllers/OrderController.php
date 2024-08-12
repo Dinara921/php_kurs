@@ -17,9 +17,16 @@ class OrderController extends BaseController
     public function getOrdersForUser($userId)
     {
         $orders = Order::where('user_id', $userId)->get();
-        
+    
         $openOrder = $orders->firstWhere('status', 1);
 
-        return response()->json($openOrder);
+        if ($openOrder) 
+        {
+            return response()->json(['id' => $openOrder->id]);
+        } 
+        else 
+        {
+            return response()->json(['message' => 'Open order not found'], 404);
+        }
     }
 }

@@ -106,9 +106,13 @@ Route::get('/orderDetail/{id}', [OrderDetailController::class, 'item']);
 
 Route::get('/orderDetails', [OrderDetailController::class, 'list']);
 
+Route::get('/orderDetails/{orderId}', [OrderDetailController::class, 'getOrderDetailsByOrderId']);
+
 Route::put('/orderDetail/{id}', [OrderDetailController::class, 'update']);
 
 Route::delete('/orderDetail/{id}', [OrderDetailController::class, 'delete']);
+
+Route::post('/orderDetail/checkOnly', [OrderDetailController::class, 'checkOnly']);
 
 
 Route::post('/country', [CountryController::class, 'create']);
