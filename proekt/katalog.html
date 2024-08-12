@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+       <meta charset="UTF-8">
+       <meta http-equiv="X-UA-Compatible" content="IE=edge">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Каталог</title>
+       <link rel="stylesheet" href="css/katalog.css">
+       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+       <style>
+              #okno {
+                     width: 70%;
+                     height: auto;
+                     text-align: center;
+                     padding: 5% 10% 29% 10%;
+                     border: 1px solid #aaaaaa;
+                     border-radius: 5px;
+                     color: #87834e;
+                     display: none;
+                     position: fixed;
+                     top: 50%;
+                     left: 50%;
+                     transform: translate(-50%, -50%);
+                     background-color: #fff;
+                     z-index: 1000;
+              }
+
+              #oknoText {
+                     padding: 2%;
+              }
+
+              #kontakty_password,
+              #kontakty_email {
+                     width: 50%;
+                     height: 35px;
+              }
+
+              .header_menu {
+                     display: flex;
+                     align-items: center;
+              }
+
+              .close {
+                     position: absolute;
+                     top: 10px;
+                     right: 10px;
+                     cursor: pointer;
+              }
+
+              .modal-open {
+                     cursor: pointer;
+              }
+
+              #loading {
+                     text-align: center;
+                     margin: 20px;
+              }
+       </style>
+       <script>
+           $(document).ready(function () {
+                     function fetchProducts(url) {
+                            $('#loading').show();
+                            $.ajax({
+                                   url: url,
+                                   method: 'GET',
+                                   dataType: 'json',
+                                   success: function (data) {
+                                          $('#loading').hide();
+                                          let html = '';
+                                          if (data.length === 0) {
+                                                 html = '<p>Нет товаров</p>';
+                                          } else {
+                                                 $.each(data, function (index, value) {
+                                                        html += '<div class="Con1BLOCK">' +
+                                                               '<div class="Con1Pokryvalo">' +
+                                                               '<img src="img/img1.jpeg" id="imgT" class="Con1Img" alt="">' +
+                                                               '<div class="CPT1">' +
+                                                               '<p class="aft">' + value.overview + '</p>' +
+                                                               '</div>' +
+                                                               '</div>' +
+                                                               '<p class="Con1Text1 name1">' + value.name + '</p>' +
+                                                               '<p class="Con1Text2 price1">' + value.price + '</p>' +
+                                                               '<button class="designB1 Con1Text3" data-id="' + value.id + '" data-name="' + value.name + '" data-price="' + value.price + '">Добавить в корзину</button>' +
+                                                               '</div>';
+                                                        console.log(value.id);
+                                                 });
+                                          }
+                                          $("#products").html(html);
+                                   },
+                                   error: function () {
+                                          $('#loading').hide();
+                                          $("#products").html('<p>Ошибка при загрузке данных</p>');
+                                   }
+                            });
+                     }
+
+                     function updateCartIcon() {
+                            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+                            $('#divKorzina').find('span').remove();
+                            $('#divKorzina').append(`<span>${cart.length}</span>`);
+                            console.log('Cart icon updated. Cart length:', cart.length);
+                     }
+
+                     function updateAuthLinks() {
+                            const token = localStorage.getItem('token');
+                            console.log('Token:', token);
+                            if (token) {
+                                   $('#login-btn').hide();
+                                   $('#logout-btn').show().off('click').on('click', function () {
+                                          console.log('Logging out...');
+                                          localStorage.removeItem('token');
+                                          localStorage.removeItem('userId');
+                                          updateAuthLinks();
+                                   });
+                                   getUserData(token);
+                            } 
+                            else 
+                            {
+                                   $('#login-btn').show().off('click').on('click', function () {
+                                          $('#okno').show();
+                                   });
+                                   $('#logout-btn').hide();
+                            }
+                     }
+
+                     function getUserData(token) 
+                     {
+                         $.ajax({
+                                url: 'http://localhost:8080/api/userId',
+                                method: 'GET',
+                                dataType: 'json',
+                                headers: {
+                                       'Authorization': 'Bearer ' + token
+                                },
+                                data: {
+                                       token: token
+                                },
+                                success: function (response) {
+                                       console.log('User data:', response);
+
+                                       if (response && response.user_id) 
+                                       {
+                                              console.log('User ID:', response.user_id);
+                                              localStorage.setItem('userId', response.user_id);
+                                              handleCart(response.user_id);
+                                       }
+                                       else {
+                                              console.error('No user found with the given token.');
+                                       }
+                                },
+                                error: function (xhr) {
+                                       console.error('Failed to get user data', xhr.responseText);
+                                }
+                         });
+                     }
+
+                     fetchProducts('http://localhost:8080/api/products');
+                     updateCartIcon();
+                     updateAuthLinks();
+
+                     $('#sortNameAsc').on('click', function () {
+                            fetchProducts('http://localhost:8080/api/productsN');
+                     });
+
+                     $('#sortNameDesc').on('click', function () {
+                            fetchProducts('http://localhost:8080/api/productsNm');
+                     });
+
+                     $('#sortPriceAsc').on('click', function () {
+                            fetchProducts('http://localhost:8080/api/productsP');
+                     });
+
+                     $('#sortPriceDesc').on('click', function () {
+                            fetchProducts('http://localhost:8080/api/productsPr');
+                     });
+
+                     $(document).on("click", ".designB1", function () {
+                            const item = {
+                                   id: $(this).data("id"),
+                                   name: $(this).data("name"),
+                                   price: parseFloat($(this).data("price")),
+                                   count: 1
+                            };
+                            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+                            const existingItem = cart.find(i => i.id === item.id);
+                            if (existingItem) {
+                                   existingItem.count += 1;
+                            } else {
+                                   cart.push(item);
+                            }
+                            localStorage.setItem("cart", JSON.stringify(cart));
+                            updateCartIcon();
+                     });
+
+                     $('.close').on('click', function () {
+                            $('#okno').hide();
+                     });
+
+                     $('#but').on('click', function () {
+                            const email = $('#kontakty_email').val();
+                            const password = $('#kontakty_password').val();
+
+                            $.ajax({
+                                   url: 'http://localhost:8080/api/login',
+                                   method: 'POST',
+                                   data: {
+                                          email: email,
+                                          password: password
+                                   },
+                                   success: function (response) {
+                                          console.log('Login successful. Token:', response.token);
+                                          localStorage.setItem('token', response.token);
+                                          $('#okno').hide();
+                                          updateAuthLinks();
+                                   },
+                                   error: function () {
+                                          alert('Неверный email или пароль');
+                                   }
+                            });
+                     });
+
+                     window.addEventListener('storage', function (e) {
+                            if (e.key === 'token') {
+                                   console.log('Token changed in another tab:', e.newValue);
+                                   updateAuthLinks();
+                            }
+                     });
+              });
+
+       </script>
+</head>
+
+<body>
+       <header>
+              <div class="blockMenu">
+                     <div class="back">
+                            <a href="konstruktor.html">
+                                   <p class="Tback">ГЛАВНАЯ</p>
+                            </a>
+                            <img src="img/back.png" class="backI">
+                            <p class="Tback">КАТАЛОГ</p>
+                     </div>
+                     <div class="divKorzina" id="divKorzina">
+                            <a href="korzina.html"><img src="img/корзина.png" class="korzina" id="korzina"></a>
+                            <div id="okno" class="Okno">
+                                   <h1 class="OKNO">Авторизоваться</h1>
+                                   <p class="OKNO" id="oknoText">e-mail:</p>
+                                   <input type="email" id="kontakty_email"><br>
+                                   <p class="OKNO" id="oknoText">password:</p>
+                                   <input type="password" id="kontakty_password"><br>
+                                   <input type="button" value="ВОЙТИ" id="but"><br>
+                                   <a href="#" class="close"><img src="img/close.png" alt="Закрыть"></a>
+                            </div>
+                            <a href="#" class="header_t modal-open" id="login-btn">Войти</a>
+                            <a href="#" class="header_t" id="logout-btn" style="display:none;">Выйти</a>
+                     </div>
+              </div>
+              <div class="verhushka">
+                     <div class="Verhushka">Сортировать по:</div>
+                     <div class="verhushka1">
+                            <img src="img/strelka1.png" class="strelka" alt="По убыванию" id="sortNameDesc">
+                            Названию
+                            <img src="img/strelka2.png" class="strelka" alt="По возрастанию" id="sortNameAsc">
+                     </div>
+                     <div class="verhushka1">
+                            <img src="img/strelka1.png" class="strelka" alt="По убыванию" id="sortPriceDesc">
+                            Цене
+                            <img src="img/strelka2.png" class="strelka" alt="По возрастанию" id="sortPriceAsc">
+                     </div>
+              </div>
+       </header>
+       <div id="loading" style="display:none;">Загрузка...</div>
+       <div class="container1" id="products">
+              <!-- Продукты будут загружены здесь -->
+       </div>
+       <footer>
+              <hr width="100%">
+              <div class="Footer">
+                     <div class="Fkontakty">
+                            <p class="footerText">WhatsApp: +10(754)25-56</p>
+                            <p class="footerText">Доп. телефон: +10(754)25-57</p>
+                            <p class="footerText">Адрес офиса: Алматинская обл., <br>г.Талдыкорган, ул.Майлина, д.7</p>
+                     </div>
+                     <div class="Foferta">
+                            <p class="footerText">Заказ в один клик</p>
+                            <p class="footerText">Оплата и доставка</p>
+                            <p class="footerText">Гарантия и возврат</p>
+                            <p class="footerText">Контактные данные</p>
+                     </div>
+              </div>
+       </footer>
+</body>
+
+</html>

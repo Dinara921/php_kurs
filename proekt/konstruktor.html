@@ -1,0 +1,552 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/konstruktor.css">
+    <title>Главная</title>
+    <script src="query.js"></script>
+    <style>
+        #okno {
+            width: 70%;
+            height: auto;
+            text-align: center;
+            padding: 5% 10% 29% 10%;
+            border: 1px solid #aaaaaa;
+            border-radius: 5px;
+            color: #87834e;
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    
+        #oknoText 
+        {
+            padding: 2%;
+        }
+    
+        #kontakty_password,
+        #kontakty_email 
+        {
+            width: 50%;
+            height: 35px;
+        }
+    
+        .header_menu {
+            display: flex;
+            align-items: center;
+        }
+    
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            function updateAuthLinks() 
+            {
+                const token = localStorage.getItem('token');
+                console.log('Token on page load:', token);
+                if (token) {
+                    $('#login-btn').hide();
+                    $('#logout-btn').show().off('click').on('click', function () {
+                        console.log('Logging out...');
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('userId');
+                        updateAuthLinks();
+                    });
+                    getUserData(token);
+                } 
+                else 
+                {
+                    $('#login-btn').show().off('click').on('click', function () {
+                        $('#okno').show();
+                    });
+                    $('#logout-btn').hide();
+                }
+            }
+
+            function loginUser() {
+                const email = $('#kontakty_email').val();
+                const password = $('#kontakty_password').val();
+
+                $.ajax({
+                    url: 'http://localhost:8080/api/login',
+                    method: 'POST',
+                    data: {
+                        email: email,
+                        password: password
+                    },
+                    success: function (response) {
+                        console.log('Login successful. Token:', response.token);
+                        localStorage.setItem('token', response.token);
+                        $('#okno').hide();
+                        updateAuthLinks();
+                    },
+                    error: function () {
+                        alert('Неверный email или пароль');
+                    }
+                });
+            }
+
+            function getUserData(token) {
+                $.ajax({
+                    url: 'http://localhost:8080/api/userId',
+                    method: 'GET',
+                    dataType: 'json',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    data: {
+                        token: token 
+                    },
+                    success: function (response) {
+                        console.log('User data:', response);
+
+                        if (response && response.user_id) {
+                            console.log('User ID:', response.user_id);
+                            localStorage.setItem('userId', response.user_id);
+                            handleCart(response.user_id);
+                        } 
+                        else 
+                        {
+                            console.error('No user found with the given token.');
+                        }
+                    },
+                    error: function (xhr) {
+                        console.error('Failed to get user data', xhr.responseText);
+                    }
+                });
+            }
+
+            $('#but').on('click', function () {
+                loginUser();
+            });
+
+            $('.close').on('click', function () {
+                $('#okno').hide();
+            });
+
+            window.addEventListener('storage', function (e) {
+                if (e.key === 'token') {
+                    console.log('Token changed in another tab:', e.newValue);
+                    updateAuthLinks();
+                }
+            });
+
+            function handleScroll() {
+                const images = document.querySelectorAll('.k_img, #kover-img, #image_container3, #image_container4');
+                images.forEach(image => {
+                    const rect = image.getBoundingClientRect();
+                    if (rect.top < window.innerHeight && rect.bottom >= 0) {
+                        image.style.opacity = 1;
+                        image.style.transform = "rotateX(0deg)";
+                    }
+                });
+            }
+
+            window.addEventListener("scroll", handleScroll);
+            updateAuthLinks();
+        });
+        function openAndClose() {
+                window.open('katalog.html', '_blank');
+                window.close();
+            }
+    </script>
+    </head>
+    <body>
+        <header>
+            <div class="header_shapka">
+                <div class="header_logo">
+                    <a href="#container"><img src="img/icon.png" class="LOGO" alt=""></a>
+                </div>
+                <div class="header_menu">
+                    <a href="#tovyakor1" class="header_t">Товары</a>
+                    <a href="#tovyakor4" class="header_t">Команда</a>
+                    <div id="okno" class="Okno">
+                        <h1 class="OKNO">Авторизоваться</h1>
+                        <p class="OKNO" id="oknoText">e-mail:</p>
+                        <input type="email" id="kontakty_email"><br>
+                        <p class="OKNO" id="oknoText">password:</p>
+                        <input type="password" id="kontakty_password"><br>
+                        <input type="button" value="ВОЙТИ" id="but"><br>
+                        <a href="#" class="close"><img src="img/close.png" alt=""></a>
+                    </div>
+                    <a href="#" class="header_t" id="login-btn">Войти</a>
+                    <a href="#" class="header_t" id="logout-btn" style="display:none;">Выйти</a>
+                </div>
+            </div>
+        </header>
+        <div class="container" id="container">
+            <div class = "header_contect">
+                <div class = "h_t1"><h1>«Умный»</h1></div>
+                <div class = "h_t2"><h1>интерьерный текстиль, <br> ковры и ткани для дома</h1></div>
+            </div>
+            <div class="header_tovar">
+                 <div class="image_no">     
+                    <img src="img/европейский дизайн.jpg" class ="NO" alt="">
+                    <pre> </pre><p class="NoText">Европейский дизайн</p>        
+                 </div>
+                 <div class="image_no">        
+                   <img src="img/Тактильные фактуры.jpg" class ="NO" alt="">
+                   <p class="NoText">Тактильные фактуры
+                      и трендовые палитры</p>   
+                </div>
+               <div class="image_no"> 
+                <img src="img/Ткани со свойством.jpg" class ="NO" alt="">
+                <p class="NoText">Ткани со свойством<br>
+                    лёгкой чистки</p>
+             </div>
+            </div>
+        </div>
+    <div class="container2">
+        <div class = "container2_contect" id="tovyakor1">
+            <div class = "h_t1-1"><h1>Соблюдаем баланс эстетики и функциональности</h1></div>
+            <div class = "h_t2-2"><h1>в каждой коллекции</h1></div>
+        </div>
+        <div class="image_Katalog"> 
+            <div class="i_Katalog">
+            <p class="KatalogText">Интерьерный текстиль:<br>
+                подушки, пледы, покрывала</p>
+            <hr width="100%">    
+                <img src="img/Интерьерный текстиль.jpg" id="k_img1" class ="k_img" alt="">
+            </div>
+            <div class="i_Katalog">
+                <p class="KatalogText">Умные ткани
+                    для дома <br>HoReCa</p>
+                <hr width="100%">    
+                    <img src="img/Умные ткани.jpg" id="k_img2" class ="k_img" alt="">
+            </div>
+            <div class="i_Katalog">
+                    <p class="KatalogText">Эко-ткани из 100%<br>
+                        переработанных материалов</p>
+                    <hr width="100%">    
+                        <img src="img/Эко-ткани.jpg" id="k_img3" class ="k_img" alt="">
+            </div>
+         </div>
+         <script>
+            kmage1 = document.querySelector("#k_img1");
+            kmage2 = document.querySelector("#k_img2");
+            kmage3 = document.querySelector("#k_img3");
+            function handleScroll() 
+            {
+                rect1 = kmage1.getBoundingClientRect();
+                if (rect1.top < window.innerHeight && rect1.bottom >= 0) 
+                {
+                    kmage1.style.opacity = 1;
+                    kmage1.style.transform = "rotateX(0deg)";
+                }
+                rect2 = kmage2.getBoundingClientRect();
+                if (rect2.top < window.innerHeight && rect2.bottom >= 0) 
+                {
+                    kmage2.style.opacity = 1;
+                    kmage2.style.transform = "rotateX(0deg)";
+                }
+                rect3 = kmage3.getBoundingClientRect();
+                if (rect3.top < window.innerHeight && rect3.bottom >= 0) 
+                {
+                    kmage3.style.opacity = 1;
+                    kmage3.style.transform = "rotateX(0deg)";
+                }
+            }
+            window.addEventListener("scroll", handleScroll);
+         </script>
+            <p class="KatalogText">Ковры</p>
+            <hr width="100%">
+            <img src="img/kover.jpg" id="kover-img" class="kover-img" alt="">
+            <a href="katalog.html" onclick="openAndClose()" target="_blank"> <div class="Katalogpdf">Посмотреть каталог</div></a>
+        <script>
+            koverImage = document.querySelector("#kover-img");
+            function handleScroll() 
+            {
+                rect = koverImage.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom >= 0) 
+                {
+                    koverImage.style.opacity = 1;
+                    koverImage.style.transform = "rotateX(0deg)";
+                }
+            }
+            window.addEventListener("scroll", handleScroll);
+        </script>
+    </div>
+    <!-- <div class="container3">
+       <hr width="100%">
+       <div class = "container3_contect" id="tovyakor2">
+           <div class = "h_t1"><h1>Работаем с дизайнерами</h1></div>
+           <div class = "h_t2-3"><h1>и дизайн-студиями</h1></div>
+       </div>
+       <div class = "container3_block">
+            <div class="con3_BLOCK">
+                 <ul>
+                    <li>Выгодные условия с комиссией до 15%
+                        <br>(по договору сотрудничества с юр. лицами)</li>
+                    
+                    <li>Ассортимент в наличии и под заказ</li>
+                    <li>Предоставляем продукцию для примерок, 
+                        <br>фотосессий и презентаций проектов</li>
+                    <li>Высылаем образцы и каталоги</li>
+                    <li>Шоурумы в Москве и Санкт-Петербурге</li>
+                 </ul>
+                 <input type="button" value="Договор сотрудничества" id="but1">
+            </div>
+            <div class="con3_BLOCK">
+                <img src="img/dizainer.jpg" id="image_container3" class="image_container3" alt="">
+                <script>
+                    ImageN = document.querySelector("#image_container3");
+                    function handleScroll() 
+                    {
+                        rect = ImageN.getBoundingClientRect();
+                        if (rect.top < window.innerHeight && rect.bottom >= 0) 
+                        {
+                            ImageN.style.opacity = 1;
+                            ImageN.style.transform = "rotateX(0deg)";
+                        }
+                    }
+                    window.addEventListener("scroll", handleScroll);
+                </script>
+            </div>
+            <div class="con3_BLOCK">
+                <p class="conteiner3_text">ОСТАВЬТЕ КОНТАКТНЫЕ ДАННЫЕ — СВЯЖЕМСЯ С ВАМИ В РАБОЧЕЕ ВРЕМЯ И УТОЧНИМ ДЕТАЛИ СОТРУДНИЧЕСТВА!</p>
+                <input type="text" placeholder="Имя" id="kontakty_name">
+                <input type="email" placeholder="e-mail" id="kontakty_email">
+                <input type="tel" placeholder="+7 телефон" id="kontakty_phone" value="+7"><br>
+                <div class="CHEckBOX">
+                  <input type="checkbox" name="agreement" id="agreement_checkbox">
+                  <p class="kontakty_Ps"> Соглашаюсь с политикой конфиденциальности</p>
+                </div>
+                <input type="button" value="Отправить" id="but2" onclick="Form1()">
+              </div>
+              <script>
+              function Form1() 
+              {
+                name = document.getElementById("kontakty_name").value;
+                email = document.getElementById("kontakty_email").value;
+                phone = document.getElementById("kontakty_phone").value;
+                checkbox = document.getElementById("agreement_checkbox");
+                
+                if(name.length<1)
+                {
+                  alert("Заполните имя");
+                  return;
+                }
+                if (name.length < 2) 
+                {
+                  alert("Имя введено некорректно");
+                  return;
+                }
+
+                emailV = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+                if(email.length<1 )
+                {
+                  alert("Заполните email");
+                  return;
+                }
+                if (!email.match(emailV)) 
+                {
+                  alert("Email введен некорректно");
+                  return;
+                }
+
+                if(phone.length<3)
+                {
+                  alert("Заполните номер телефона");
+                  return;
+                }
+                phoneN = /^\+7\d{10}$/;
+                if (!phone.match(phoneN)) 
+                {
+                    alert("Номер телефона введен некорректно");
+                    return;
+                }                                                      
+                if (!checkbox.checked) 
+                {
+                  alert("Необходимо согласиться с политикой конфиденциальности");
+                  return;
+                }
+          
+                    name.value = "";
+                    email.value = "";
+                    phone.value = "+7";
+                    checkbox.checked = false;
+                    alert("Консультант с вами свяжется!");
+              }
+              </script>
+       </div>
+    </div>
+    <div class="container4">
+        <hr width="100%">
+        <div class = "container4_contect" id="tovyakor3">
+            <div class = "h_t1"><h1>Работаем с компаниями</h1></div>
+            <div class = "h_t2-3"><h1>и участвуем в тендерных проектах</h1></div>
+        </div>
+        <div class = "container3_block">
+             <div class="con3_BLOCK">
+                  <ul>
+                     <li>6 лет на рынке</li>
+                     <li>Большие объёмы производства и <br>поставок</li>
+                     <li>Соблюдаем сроки</li>
+                     <li>Удобные и гибкие условия сотрудничества</li>
+                     <li>Используем материалы с соблюдением <br>
+                        эко-норм и сертификатами безопасности</li>
+                  </ul>
+                  <input type="button" value="Договор сотрудничества" id="but1">
+             </div>
+             <div class="con3_BLOCK">
+                 <img src="img/photo1686751059.jpeg" id="image_container4" class="image_container4" alt="">
+                 <script>
+                    ImageC = document.querySelector("#image_container4");
+                    function handleScroll() 
+                    {
+                        rect = ImageC.getBoundingClientRect();
+                        if (rect.top < window.innerHeight && rect.bottom >= 0) 
+                        {
+                            ImageC.style.opacity = 1;
+                            ImageC.style.transform = "rotateX(0deg)";
+                        }
+                    }
+                    window.addEventListener("scroll", handleScroll);
+                </script>
+             </div>
+             <div class="con3_BLOCK">
+                <p class="conteiner3_text">ОСТАВЬТЕ КОНТАКТНЫЕ ДАННЫЕ — СВЯЖЕМСЯ С ВАМИ В РАБОЧЕЕ ВРЕМЯ И УТОЧНИМ ДЕТАЛИ СОТРУДНИЧЕСТВА!</p>
+                <input type="text" placeholder="Имя" id="kontakty_name2">
+                <input type="email" placeholder="e-mail" id="kontakty_email2">
+                <input type="tel" placeholder="+7 телефон" id="kontakty_phone2" value="+7"><br>
+                <div class="CHEckBOX">
+                  <input type="checkbox" name="agreement" id="agreement_checkbox2">
+                  <p class="kontakty_Ps"> Соглашаюсь с политикой конфиденциальности</p>
+                </div>
+                <input type="button" value="Отправить" id="but2" onclick="Form2()">
+             </div>
+             <script>
+                function Form2() 
+                {
+                  name = document.getElementById("kontakty_name2").value;
+                  email = document.getElementById("kontakty_email2").value;
+                  phone = document.getElementById("kontakty_phone2").value;
+                  checkbox = document.getElementById("agreement_checkbox2");
+                    
+                    if(name.length<1)
+                    {
+                      alert("Заполните имя");
+                      return;
+                    }
+                    if (name.length < 2) 
+                    {
+                      alert("Имя введено некорректно");
+                      return;
+                    }
+    
+                    emailV = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+                    if(email.length<1 )
+                    {
+                      alert("Заполните email");
+                      return;
+                    }
+                    if (!email.match(emailV)) 
+                    {
+                      alert("Email введен некорректно");
+                      return;
+                    }
+    
+                    if(phone.length<3)
+                    {
+                      alert("Заполните номер телефона");
+                      return;
+                    }
+                    phoneN = /^\+7\d{10}$/;
+                    if (!phone.match(phoneN)) 
+                    {
+                        alert("Номер телефона введен некорректно");
+                        return;
+                    }                                                      
+                    if (!checkbox.checked) 
+                    {
+                      alert("Необходимо согласиться с политикой конфиденциальности");
+                      return;
+                    }
+              
+                    name.value = "";
+                    email.value = "";
+                    phone.value = "+7";
+                    checkbox.checked = false;
+                    alert("Консультант с вами свяжется!");
+                }
+                </script>
+        </div>
+     </div> -->
+     <div class="container5">
+        <div class = "container5_contect" id="tovyakor4">
+            <div class = "h_t1"><h1>Команда, которая будет</h1></div>
+            <div class = "h_t2-5"><h1>работать с вами</h1></div>
+        </div>
+        <div class = "container5_block">
+            <div class="con5_BLOCK">
+                <p class="ComandaText">Руководитель направления<br>
+                   Интерьерный текстиль и ковры</p>
+                <hr width="100%">    
+                    <img src="img/1.png" id="c_img1" class ="c_img" alt="">
+            </div>
+            <div class="con5_BLOCK">
+                <p class="ComandaText">Менеджер направления<br>
+                    Интерьерный текстиль и ковры</p>
+                <hr width="100%">    
+                    <img src="img/2.png" id="c_img2" class ="c_img" alt="">
+            </div>
+            <div class="con5_BLOCK">
+                <p class="ComandaText">Менеджер<br>
+                    контрактных проектов</p>
+                <hr width="100%">    
+                    <img src="img/3.png" id="c_img3" class ="c_img" alt="">
+            </div>
+            <script>
+                    Cimage1 = document.querySelector("#c_img1");
+                    Cimage2 = document.querySelector("#c_img2");
+                    Cimage3 = document.querySelector("#c_img3");
+                    function handleScroll() 
+                    {
+                        rect1 = Cimage1.getBoundingClientRect();
+                        if (rect1.top < window.innerHeight && rect1.bottom >= 0) 
+                        {
+                            Cimage1.style.opacity = 1;
+                            Cimage1.style.transform = "rotateX(0deg)";
+                        }
+                        rect2 = Cimage2.getBoundingClientRect();
+                        if (rect2.top < window.innerHeight && rect2.bottom >= 0) 
+                        {
+                            Cimage2.style.opacity = 1;
+                            Cimage2.style.transform = "rotateX(0deg)";
+                        }
+                        rect3 = Cimage3.getBoundingClientRect();
+                        if (rect3.top < window.innerHeight && rect3.bottom >= 0) 
+                        {
+                            Cimage3.style.opacity = 1;
+                            Cimage3.style.transform = "rotateX(0deg)";
+                        }
+                    }
+                    window.addEventListener("scroll", handleScroll);
+            </script>
+        </div>
+     </div>
+     <footer>
+        <hr width="100%">
+     <div class="Footer">
+        <div class="Fkontakty">
+            <p class="footerText">WhatsApp: +10(754)25-56</p>
+            <p class="footerText">Доп. телефон: +10(754)25-57</p>
+            <p class="footerText">Адрес офиса: Алматиснская обл., <br>г.Талдыкорган, ул.Майлина, д.7</p>
+         </div>
+         <div class="Fkontakty2">
+            <a href=""></a><p class="FText">INSTAGRAM <img src="img/strelka3.png" class="strelka"  alt=""></p></a>
+            <a href=""><p class="FText">TELEGRAM <img src="img/strelka3.png" class="strelka"  alt=""></p></a>
+            <a href=""><p class="FText">FACEBOOK <img src="img/strelka3.png" class="strelka"  alt=""></p></a>
+         </div>
+    </div></footer>
+</body>
+</html>

@@ -1,0 +1,334 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;1,200&family=Playfair+Display:wght@700&family=Sacramento&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&family=Montserrat:ital,wght@0,300;1,200&family=Playfair+Display:wght@700&family=Sacramento&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&family=Montserrat:ital,wght@0,300;1,200&family=Mulish:wght@700&family=Playfair+Display:wght@700&family=Sacramento&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&family=Montserrat:ital,wght@0,300;1,200&family=Mulish:wght@300;700&family=Playfair+Display:wght@700&family=Sacramento&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:ital,wght@0,300;1,200&family=Mulish:wght@300;700&family=Playfair+Display:wght@700&family=Sacramento&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:ital,wght@0,300;1,200&family=Mulish:wght@300;700&family=Playfair+Display:wght@700&family=Raleway:wght@100&family=Sacramento&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:ital,wght@0,300;1,200&family=Mulish:wght@300;700&family=Playfair+Display:wght@700&family=Raleway:wght@100;400&family=Sacramento&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    background: #fffdfa;
+}
+a
+{
+    text-decoration: none;
+    color: #202336;
+}
+.back
+{
+    position: relative;
+    left: 5%;
+    margin:5% 0 1% 0;
+    width: 25%;
+    text-align: center;
+    font-size: 100%;
+    align-items: center;
+    display: flex;
+    color: #87834e;
+}
+.Tback
+{
+    color: #87834e;
+}
+.backI
+{
+    width: 8%;
+}
+.header
+{
+   width: 100vw;
+   height: auto;
+}
+.container1
+{
+    position: relative;
+    margin: 8% 0 0 0%;
+    left: 10%;
+    width: 80%;
+    border:2px solid #87834e;  
+    font-size: 100%;
+}
+.Con1BLOCK
+{
+    padding:2% 0 2% 2%;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    text-align: center;
+    background: #87834e6d;
+}
+.Bl1Text
+{
+    width: 10%;
+    font-family: 'Raleway', sans-serif;
+    background: #87834e00;
+    color: #fffdfa;
+}
+.Con2BLOCK
+{
+    padding: 2%;
+    display: flex;
+    width: 80%;
+    justify-content: space-around;
+    text-align: center;
+    align-items: center;
+}
+.BL2Img
+{
+    padding-left: 10%;
+    width:40%;
+}
+.Bl2Text
+{
+    width: 60%;
+    font-family: 'Raleway', sans-serif;
+}
+.Con3BLOCK
+{
+    display: flex;
+    margin: 2%;
+    width: 80%;
+    justify-content: space-between;
+    text-align: center;
+    align-items: center;
+}
+.Bl3Text
+{
+    width: 30%;
+    font-family: 'Raleway', sans-serif;
+}
+input[type="number"]
+{
+    width: 6%;
+}
+.ConKupon
+{
+    position: relative;
+    margin: 5% 0 5% 0;
+    left: 10%;
+    width: 25%; 
+    font-size: 100%;
+}
+.KuponText
+{
+    font-family: 'Raleway', sans-serif;
+}
+input[type="text"]
+{
+    margin: 2% 0 2% 0;
+    width: 100%;
+    border:0.5px solid #87834e; 
+}
+.ConBut
+{
+    position: relative;
+    left: 10%;
+    width: 80%; 
+    font-size: 90%;
+}
+input[type="button"]
+{
+    position: relative;
+    margin: 1%;
+    float: right;
+    right: 10%;
+    width: 20%;
+    height: 5vh;
+    border:0.5px solid #87834e; 
+    font-size: 110%;
+    color: #fffdfa;
+    background: #87834e; 
+}
+@media (min-width: 768px) and (max-width:990px)
+{
+    .back
+    {
+        font-size: 80%;
+    }
+    .backI
+    {
+        width: 4%;
+    }
+    .Bl1Text
+    {
+        font-size: 80%;
+    }
+    .Bl2Text
+    {
+        font-size: 80%;
+    }
+    .Bl3Text
+    {
+        font-size: 80%;
+    }
+    .ConKupon
+    {
+        font-size: 80%;
+    }
+    .ConBut
+    {
+        font-size: 80%;
+    }
+    input[type="button"]
+    {
+        font-size: 80%;
+    }
+}
+@media (min-width: 699px) and (max-width:768px)
+{
+    .back
+    {
+        font-size: 70%;
+    }
+    .backI
+    {
+        width: 4%;
+    }
+    .Bl1Text
+    {
+        font-size: 70%;
+    }
+    .Bl2Text
+    {
+        font-size: 70%;
+    }
+    .Bl3Text
+    {
+        font-size:70%;
+    }
+    .ConKupon
+    {
+        font-size: 70%;
+    }
+    .ConBut
+    {
+        font-size: 70%;
+    }
+    input[type="button"]
+    {
+        font-size: 70%;
+    }
+}
+@media (min-width: 620px) and (max-width:699px)
+{
+    .back
+    {
+        font-size: 60%;
+    }
+    .backI
+    {
+        width: 4%;
+    }
+    .Bl1Text
+    {
+        font-size: 60%;
+    }
+    .Bl2Text
+    {
+        font-size: 60%;
+    }
+    .Bl3Text
+    {
+        font-size: 60%;
+    }
+    .ConKupon
+    {
+        font-size: 60%;
+    }
+    .ConBut
+    {
+        font-size: 60%;
+    }
+    input[type="button"]
+    {
+        font-size: 60%;
+        height: 2vh;
+    }
+}
+@media (min-width: 456px) and (max-width:620px)
+{
+    .back
+    {
+        font-size: 50%;
+    }
+    .backI
+    {
+        width: 4%;
+    }
+    .Bl1Text
+    {
+        font-size: 60%;
+    }
+    .Bl2Text
+    {
+        font-size: 60%;
+    }
+    .Bl3Text
+    {
+        font-size: 60%;
+    }
+    .ConKupon
+    {
+        font-size: 60%;
+    }
+    .ConBut
+    {
+        font-size: 60%;
+    }
+    input[type="button"]
+    {
+        font-size: 60%;
+        height: 2vh;
+    }
+}
+@media (min-width: 390px) and (max-width:456px)
+{
+    .back
+    {
+        font-size: 30%;
+    }
+    .backI
+    {
+        width: 4%;
+    }
+    .Bl1Text
+    {
+        font-size: 30%;
+    }
+    .ConKupon
+    {
+        font-size: 30%;
+    }
+    .ConBut
+    {
+        font-size: 30%;
+    } 
+    .Bl2Text
+    {
+        font-size: 30%;
+    }
+    .Bl3Text
+    {
+        font-size: 30%;
+    }
+    input[type="number"]
+    {
+        width: 30%;
+    }
+    input[type="text"]
+    {
+        width: 50%;
+    }
+    input[type="button"]
+    {
+        font-size: 35%;
+        height: 1vh;
+    }
+}
+
