@@ -51,47 +51,21 @@ class UserController extends BaseController
         return response()->json(['user' => $item, 'token' => $token], 200);
     }
 
-    public function logout(LoginRequest $request)
-    {
-        $token = $request->bearerToken();
-
-        \Log::info('Token received for logout:', ['token' => $token]);
-
-        if (!$token) {
-            return response()->json(['message' => 'No token provided'], 400);
-        }
-
-        try {
-            $user = User::where('token', $token)->first();
-
-            if (!$user) {
-                \Log::info('No user found with token:', ['token' => $token]);
-                return response()->json(['message' => 'Invalid token'], 400);
-            }
-
-            $user->token = null;
-            $user->save();
-
-            return response()->json(['message' => 'Logout successful'], 200);
-        } catch (\Exception $e) {
-            \Log::error('Logout error: ' . $e->getMessage());
-            return response()->json(['message' => 'Server error'], 500);
-        }
-    }
-
     public function getUserIdByToken(UserIdRequest $request)
     {
         $token = $request->input('token');
 
         \Log::info('Token received:', ['token' => $token]);
 
-        if (!$token) {
+        if (!$token) 
+        {
             return response()->json(['message' => 'No token provided'], 400);
         }
 
         $user = User::where('token', $token)->first();
 
-        if (!$user) {
+        if (!$user) 
+        {
             \Log::info('No user found with token:', ['token' => $token]);
             return response()->json(['message' => 'Invalid token'], 400);
         }

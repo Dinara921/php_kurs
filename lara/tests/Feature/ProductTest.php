@@ -90,7 +90,7 @@ class ProductTest extends TestCase
         $this->assertDatabaseMissing('products', ['id' => $product->id]);
     }
 
-    public function test_fakeAddSale()
+    public function test_fakeAddProduct()
     {
         $product = Product::factory()->create();
 

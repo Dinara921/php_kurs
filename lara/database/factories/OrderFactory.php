@@ -23,8 +23,7 @@ class OrderFactory extends Factory
         return 
         [
             'status' => $this->faker->numberBetween(1, 4),
-            'user_id' => $this->faker->randomElement($userIds),
-            'summa' => $this->faker->numberBetween
+            'user_id' => $this->faker->randomElement($userIds)
         ];
     }
 }

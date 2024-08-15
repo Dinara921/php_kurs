@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\OrderDetail;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Requests\OrderDetailRequest;
 
@@ -18,7 +19,7 @@ class OrderDetailController extends BaseController
     {
        try {
             $orderDetails = OrderDetail::where('order_id', $orderId)
-                ->with('product')  // Загрузка данных продукта
+                ->with('product')  
                 ->get();
 
             $result = $orderDetails->map(function ($orderDetail) 
@@ -42,7 +43,6 @@ class OrderDetailController extends BaseController
 
     public function checkOnly(OrderDetailRequest $request)
     {
-        // Валидация запроса
         $validated = $request->validate([
             'order_id' => 'required|integer',
             'product_id' => 'required|integer',
@@ -50,33 +50,49 @@ class OrderDetailController extends BaseController
             'price' => 'required|numeric',
         ]);
 
-        // Поиск существующей записи
         $orderDetail = OrderDetail::where('order_id', $validated['order_id'])
             ->where('product_id', $validated['product_id'])
             ->first();
 
+        \Log::info('OrderDetail found, updating:', [
+            'order_id' => $validated['order_id'], 
+            'product_id' => $validated['product_id']
+        ]);
+
         if ($orderDetail) 
         {
-            // Логирование для отладки
-            \Log::info('OrderDetail found, updating:', ['order_id' => $validated['order_id'], 'product_id' => $validated['product_id']]);
-
-            // Обновление существующей записи
             $orderDetail->update([
                 'count' => $validated['count'],
                 'price' => $validated['price'],
             ]);
+        }           
+        else 
+        {
+            $orderDetail = OrderDetail::create($validated);
+        } 
 
-            return response()->json(['message' => 'Order detail updated', 'data' => $orderDetail]);
+        $sum = 0;
+        $orderDetails = OrderDetail::where('order_id', $validated['order_id'])->get();
+        
+        foreach ($orderDetails as $item) 
+        {
+            $sum += $item->count * $item->price;
+        }
+
+        $order = Order::find($validated['order_id']);
+
+        if ($order) 
+        {
+            $order->update([
+                'summa' => $sum
+            ]);
         } 
         else 
         {
-            // Логирование для отладки
-            \Log::info('OrderDetail not found, creating:', ['order_id' => $validated['order_id'], 'product_id' => $validated['product_id']]);
-
-            // Создание новой записи
-            $orderDetail = OrderDetail::create($validated);
-
-            return response()->json(['message' => 'Order detail created', 'data' => $orderDetail]);
+            return response()->json(['message' => 'Order not found'], 404);
         }
+
+        return response()->json(['message' => 'Order detail updated', 'data' => $orderDetail]);  
     }
+
 }

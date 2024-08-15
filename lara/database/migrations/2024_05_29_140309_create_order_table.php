@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->integer('status');
             $table->integer('user_id');
-            $table->integer('summa');
+            $table->integer('summa')->nullable(false);
             $table->timestamps();
         });
     }
