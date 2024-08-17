@@ -26,7 +26,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('phone')->change(); // Возврат к исходному типу данных, если потребуется откат
+            $table->integer('phone')->change(); 
         });
     }
 };

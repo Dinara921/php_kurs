@@ -12,16 +12,16 @@ class Order extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
     
     public function orderDetail()
     {
-        return $this->hasMany(OrderDetail::class);
+        return $this->hasMany(OrderDetail::class, 'order_id');
     }
     
     public function review()
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(Review::class, 'order_id');
     }
 }

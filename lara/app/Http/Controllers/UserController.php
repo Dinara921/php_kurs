@@ -11,6 +11,7 @@ use App\Http\Requests\UserIdRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
 class UserController extends BaseController
 {
@@ -76,14 +77,32 @@ class UserController extends BaseController
         return response()->json(['user_id' => $user->id], 200);
     }
 
-    public function registerAndOrder(UserRequest $request)
+    public function registerAndOrder(Request $request)
     {
-        $data = $request->validated();
+        $request->validate([
+            'email' => 'required|string|email|unique:users,email',
+            'password' => 'required|string|min:8|max:20', 
+            'name' => 'nullable|string', 
+            'address' => 'required|string|max:255',  
+            'phone' => 'nullable|numeric',
+            'cartItems' => 'required|array',
+            'cartItems.*.id' => 'required|integer',
+            'cartItems.*.count' => 'required|integer',
+            'cartItems.*.price' => 'required|numeric',
+        ]);
+
+        $data = $request->all();
 
         DB::beginTransaction();
 
         try 
         {
+            $existingUser = User::where('email', $data['email'])->first();
+            if ($existingUser) 
+            {
+                return response()->json(['error' => 'Пользователь с таким email уже существует'], 400);
+            }
+
             $user = User::create([
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
@@ -92,7 +111,6 @@ class UserController extends BaseController
                 'phone' => $data['phone']
             ]);
             
-
             $token = Str::random(30);
             $user->token = $token;
             $user->save();
@@ -102,12 +120,12 @@ class UserController extends BaseController
                 'status' => 2 
             ]);
 
-            $cartItems = $request->input('cartItems', []);
+            $cartItems = $data['cartItems'];
             foreach ($cartItems as $item) 
             {
                 OrderDetail::create([
                     'order_id' => $order->id,
-                    'product_id' => $item['product_id'],
+                    'product_id' => $item['id'],
                     'count' => $item['count'],
                     'price' => $item['price']
                 ]);
@@ -124,6 +142,7 @@ class UserController extends BaseController
         catch (\Exception $e) 
         {
             DB::rollBack();
+            Log::error('Ошибка при оформлении заказа: ' . $e->getMessage());
             return response()->json(['error' => 'Ошибка при обработке запроса'], 500);
         }
     }

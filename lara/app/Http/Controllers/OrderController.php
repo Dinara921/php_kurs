@@ -17,18 +17,13 @@ class OrderController extends BaseController
     public function getOrdersForUser($userId)
     {
         $orders = Order::where('user_id', $userId)->get();
-    
-        $openOrder = $orders->firstWhere('status', 1);
 
-        if ($openOrder) 
+        if ($orders->isEmpty()) 
         {
-            return response()->json(['id' => $openOrder->id]);
-        } 
-        else 
-        {
-            return response()->json(['message' => 'Open order not found'], 404);
+            return response()->json(['message' => 'No orders found for this user'], 404);
         }
+
+        return response()->json(['orders' => $orders], 200);
     }
 
-    
 }
