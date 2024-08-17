@@ -42,6 +42,8 @@ Route::delete('/user/{id}', [UserController::class, 'delete']);
 
 Route::get('/userId', [UserController::class, 'getUserIdByToken']);
 
+Route::post('/registerAndOrder', [UserController::class, 'registerAndOrder']);
+
 
 Route::post('/sale', [SaleController::class, 'create']);
 
@@ -74,6 +76,7 @@ Route::get('/products', [ProductController::class, 'list']);
 Route::put('/product/{id}', [ProductController::class, 'update']);
 
 Route::delete('/product/{id}', [ProductController::class, 'delete']);
+
 
 
 Route::get('/productsN', [SortingController::class, 'sortingAscName']);
@@ -111,6 +114,8 @@ Route::put('/orderDetail/{id}', [OrderDetailController::class, 'update']);
 Route::delete('/orderDetail/{id}', [OrderDetailController::class, 'delete']);
 
 Route::post('/orderDetail/checkOnly', [OrderDetailController::class, 'checkOnly']);
+
+Route::post('/orderDetail/{orderId}/reduce', [OrderDetailController::class, 'reduceProductQuantities']);
 
 
 Route::post('/country', [CountryController::class, 'create']);

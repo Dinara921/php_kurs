@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\OrderDetail;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Requests\OrderDetailRequest;
 
@@ -43,12 +44,7 @@ class OrderDetailController extends BaseController
 
     public function checkOnly(OrderDetailRequest $request)
     {
-        $validated = $request->validate([
-            'order_id' => 'required|integer',
-            'product_id' => 'required|integer',
-            'count' => 'required|integer',
-            'price' => 'required|numeric',
-        ]);
+        $validated = $request->validated();
 
         $orderDetail = OrderDetail::where('order_id', $validated['order_id'])
             ->where('product_id', $validated['product_id'])
@@ -65,7 +61,7 @@ class OrderDetailController extends BaseController
                 'count' => $validated['count'],
                 'price' => $validated['price'],
             ]);
-        }           
+        } 
         else 
         {
             $orderDetail = OrderDetail::create($validated);
@@ -95,4 +91,34 @@ class OrderDetailController extends BaseController
         return response()->json(['message' => 'Order detail updated', 'data' => $orderDetail]);  
     }
 
+
+    public function reduceProductQuantities($orderId)
+    {
+        try 
+        {
+            $orderDetails = OrderDetail::where('order_id', $orderId)->get();
+
+            foreach ($orderDetails as $detail) 
+            {
+                $product = Product::find($detail->product_id);
+                if ($product) 
+                {
+                    $product->count -= $detail->count;
+                    $product->count = max($product->count, 0);                 
+                    $product->save();
+                } 
+                else 
+                {
+                    return response()->json(['error' => 'Продукт не найден'], 404);
+                }
+            }
+
+            return response()->json(['message' => 'Количество товаров обновлено успешно']);
+        } 
+        catch (\Exception $e) 
+        {
+            \Log::error('Ошибка при уменьшении количества товаров: ' . $e->getMessage());
+            return response()->json(['error' => 'Внутренняя ошибка сервера'], 500);
+        }
+    }
 }

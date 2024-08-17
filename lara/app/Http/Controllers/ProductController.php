@@ -18,11 +18,11 @@ class ProductController extends BaseController
 
     public function create(Request $request)
     {
-        // Используем правила валидации из ProductRequest
         $rules = (new ProductRequest())->rules();
         
         $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
+        if ($validator->fails()) 
+        {
             return response()->json([
                 'message' => 'Validation errors',
                 'errors' => $validator->errors()
@@ -37,7 +37,6 @@ class ProductController extends BaseController
             $data['img'] = $file_name;
         }
 
-        // Создаем запись в базе данных
         $item = $this->model::create($data);
 
         return response()->json($item, 201);

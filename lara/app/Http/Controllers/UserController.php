@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
+use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Http\Requests;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserIdRequest;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -71,5 +74,57 @@ class UserController extends BaseController
         }
 
         return response()->json(['user_id' => $user->id], 200);
+    }
+
+    public function registerAndOrder(UserRequest $request)
+    {
+        $data = $request->validated();
+
+        DB::beginTransaction();
+
+        try 
+        {
+            $user = User::create([
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'name' => $data['name'],
+                'address' => $data['address'],
+                'phone' => $data['phone']
+            ]);
+            
+
+            $token = Str::random(30);
+            $user->token = $token;
+            $user->save();
+            
+            $order = Order::create([
+                'user_id' => $user->id,
+                'status' => 2 
+            ]);
+
+            $cartItems = $request->input('cartItems', []);
+            foreach ($cartItems as $item) 
+            {
+                OrderDetail::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item['product_id'],
+                    'count' => $item['count'],
+                    'price' => $item['price']
+                ]);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'token' => $token,
+                'userId' => $user->id,
+                'orderId' => $order->id
+            ]);
+        } 
+        catch (\Exception $e) 
+        {
+            DB::rollBack();
+            return response()->json(['error' => 'Ошибка при обработке запроса'], 500);
+        }
     }
 }
