@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
+
 class UserController extends BaseController
 {
     protected $model = User::class;
@@ -24,6 +25,15 @@ class UserController extends BaseController
 
     protected function register(UserRequest $request)
     {
+        $existingUser = $this->model::where('email', $request->email)->first();
+
+        if ($existingUser) 
+        {
+             return response()->json([
+            'status' => 'error',
+            'message' => 'Пользователь с таким email уже существует'
+        ], 200);
+        }
         //TODO Условия в классе реквесте на уникальность
 
         //TODO Брать пароль в реквесте и кодировать
@@ -97,11 +107,11 @@ class UserController extends BaseController
 
         try 
         {
-            $existingUser = User::where('email', $data['email'])->first();
-            if ($existingUser) 
-            {
+             $existingUser = User::where('email', $data['email'])->first();
+             if ($existingUser) 
+             {
                 return response()->json(['error' => 'Пользователь с таким email уже существует'], 400);
-            }
+             }
 
             $user = User::create([
                 'email' => $data['email'],
@@ -119,7 +129,7 @@ class UserController extends BaseController
                 'user_id' => $user->id,
                 'status' => 2 
             ]);
-
+            
             $cartItems = $data['cartItems'];
             foreach ($cartItems as $item) 
             {
@@ -129,6 +139,27 @@ class UserController extends BaseController
                     'count' => $item['count'],
                     'price' => $item['price']
                 ]);
+            }
+
+            $sum = 0;
+            $orderDetails = OrderDetail::where('order_id', $order->id)->get();
+            
+            foreach ($orderDetails as $item) 
+            {
+                $sum += $item->count * $item->price;
+            }
+
+            $order = Order::find($order->id);
+
+            if ($order) 
+            {
+                $order->update([
+                    'summa' => $sum
+                ]);
+            } 
+            else 
+            {
+                return response()->json(['message' => 'Order not found'], 404);
             }
 
             DB::commit();

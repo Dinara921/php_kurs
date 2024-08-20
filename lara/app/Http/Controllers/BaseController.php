@@ -14,7 +14,8 @@ class BaseController extends Controller
         $rules = $this->getValidationRules();
         
         $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
+        if ($validator->fails()) 
+        {
             return response()->json([
                 'message' => 'Validation errors',
                 'errors' => $validator->errors()
@@ -42,7 +43,8 @@ class BaseController extends Controller
         $rules = $this->getValidationRules();
         
         $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
+        if ($validator->fails()) 
+        {
             return response()->json([
                 'message' => 'Validation errors',
                 'errors' => $validator->errors()

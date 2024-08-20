@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) 
         {
             $table->id();
-            $table->string('email');
+            $table->string('email')->unique();
             $table->string('password');
             $table->string('name');
             $table->string('address');     
-            $table->integer('phone')->nullable(true);
-            $table->string('token')->nullable(true);
+            $table->bigInteger('phone'); 
+            $table->string('token')->unique()->nullable(true); 
             $table->timestamps();
         });
     }

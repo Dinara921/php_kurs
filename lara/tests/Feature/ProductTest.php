@@ -6,7 +6,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Product;
-
+use Illuminate\Http\UploadedFile;
+use Faker\Generator as Faker;
 
 class ProductTest extends TestCase
 {
@@ -47,11 +48,12 @@ class ProductTest extends TestCase
         $product = Product::factory()->create();
 
         $updatedData = Product::factory()->make()->toArray();
-        //dd($updatedData);
+        // Переопределите поле 'img' с использованием фейкового изображения
+        $updatedData['img'] = UploadedFile::fake()->image('test.jpg', 100, 100);
 
         $response = $this->put('/api/product/' . $product->id, $updatedData);
 
-        $response->assertStatus(200); 
+        $response->assertStatus(200);
         $response->assertJsonStructure(['id', 'name', 'category_id', 'country_id', 'overview', 'img', 'sale_id', 'count', 'price']);
     }
 
@@ -92,18 +94,16 @@ class ProductTest extends TestCase
 
     public function test_fakeAddProduct()
     {
-        $product = Product::factory()->create();
+        $product = Product::factory()->make()->toArray();
+        // Переопределите поле 'img' с использованием фейкового изображения
+        $product['img'] = UploadedFile::fake()->image('test.jpg', 100, 100);
 
-        $response = $this->post('/api/product/', $product->toArray());
-
-        if ($response->status() === 302) 
-        {
-            $response->dump();
-        }
+        $response = $this->post('/api/product/', $product);
 
         $response->assertStatus(201);
         $response->assertJsonStructure(['id', 'name', 'category_id', 'country_id', 'overview', 'img', 'sale_id', 'count', 'price']);
     }
+
 
     public function test_createProductValidation()
     {

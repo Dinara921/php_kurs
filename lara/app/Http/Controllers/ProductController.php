@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Http\Requests\ProductRequest;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends BaseController
 {
@@ -31,9 +32,9 @@ class ProductController extends BaseController
 
         $data = $request->all();
 
-        if ($request->hasFile('file')) 
+        if ($request->hasFile('img')) 
         {
-            $file_name = Storage::disk('public')->put('uploads', $request->file('file'));
+            $file_name = Storage::disk('public')->put('uploads', $request->file('img'));
             $data['img'] = $file_name;
         }
 
@@ -41,4 +42,42 @@ class ProductController extends BaseController
 
         return response()->json($item, 201);
     }
+
+    public function update(Request $request, $id)
+    {
+        $rules = (new ProductRequest())->rules();
+        
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) 
+        {
+            return response()->json
+            ([
+                'message' => 'Validation errors',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $item = $this->model::find($id);
+        
+        if (!$item) 
+        {
+            return response()->json([
+                'message' => 'Resource not found'
+            ], 404);
+        }
+
+        $data = $request->all();
+
+        if ($request->hasFile('img')) 
+        {
+            $file_name = Storage::disk('public')->put('uploads', $request->file('img'));
+            $data['img'] = $file_name;
+        }
+
+        $item->update($data);
+
+        return response()->json($item, 200);
+    }
+
 }

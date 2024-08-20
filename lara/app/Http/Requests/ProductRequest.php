@@ -29,7 +29,7 @@ class ProductRequest extends FormRequest
             'category_id' => 'required|integer', 
             'country_id' => 'nullable|integer',
             'overview' =>  'nullable|string|min:5',
-            'img' => 'required|file|mimes:jpg,png,jpeg', 
+            'img' => 'nullable|file|mimes:jpg,png,jpeg|max:2048',  
             'sale_id' => 'nullable|integer',  
             'count' => 'required|integer', 
             'price' => 'required|integer'

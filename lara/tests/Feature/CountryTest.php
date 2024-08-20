@@ -92,9 +92,9 @@ class CountryTest extends TestCase
 
     public function test_fakeAddCountry()
     {
-        $country = Country::factory()->create();
+        $country = Country::factory()->make()->toArray();
 
-        $response = $this->post('/api/country/', $country->toArray());
+        $response = $this->post('/api/country/', $country);
 
         if ($response->status() === 302) 
         {
@@ -104,6 +104,7 @@ class CountryTest extends TestCase
         $response->assertStatus(201);
         $response->assertJsonStructure(['id', 'name']);
     }
+
 
     public function test_createCountryValidation()
     {

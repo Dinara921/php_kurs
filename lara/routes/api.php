@@ -62,6 +62,8 @@ Route::get('/review/{id}', [ReviewController::class, 'item']);
 
 Route::get('/reviews', [ReviewController::class, 'list']);
 
+Route::get('/reviews/{productId}', [ReviewController::class, 'getAllReviewsByProductId']);
+
 Route::put('/review/{id}', [ReviewController::class, 'update']);
 
 Route::delete('/review/{id}', [ReviewController::class, 'delete']);

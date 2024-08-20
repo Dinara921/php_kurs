@@ -27,7 +27,7 @@ class SaleTest extends TestCase
         $sale = Sale::factory()->create();
 
         $response = $this->get('/api/sale/' . $sale->id);
-
+        sleep(1);
         $response->assertStatus(200);
         $response->assertJsonStructure(['id', 'name', 'discount', 'expired_at']);
     }
@@ -37,7 +37,7 @@ class SaleTest extends TestCase
         $sale = Sale::all()->last();
         //dd($sale->id+1);
         $response = $this->get('/api/sale/'.$sale->id+1);
-
+        sleep(1);
         $response->assertStatus(404);
         //$response->assertJsonStructure(['id', 'name', 'discount', 'expired_at']);
     }
@@ -50,7 +50,7 @@ class SaleTest extends TestCase
         //dd($updatedData);
 
         $response = $this->put('/api/sale/' . $sale->id, $updatedData);
-
+        sleep(1);
         $response->assertStatus(200); 
         $response->assertJsonStructure(['id', 'name', 'discount', 'expired_at']);
     }
@@ -66,7 +66,7 @@ class SaleTest extends TestCase
         $this->withHeaders([
             'Accept' => 'application/json'
         ]);
-
+        sleep(1);
         $response = $this->put('/api/sale/' . $sale->id, $updatedData);
          
         $response->assertStatus(422); 
@@ -76,7 +76,7 @@ class SaleTest extends TestCase
     {
         $sale = Sale::all()->last();
         $response = $this->delete('/api/sale/' . $sale->id+100);
-
+        sleep(1);
         $response->assertStatus(404); 
     }
 
@@ -85,7 +85,7 @@ class SaleTest extends TestCase
         $sale = Sale::factory()->create();
 
         $response = $this->delete('/api/sale/' . $sale->id);
-
+        sleep(1);
         $response->assertStatus(204); 
         $this->assertDatabaseMissing('sales', ['id' => $sale->id]);
     }
@@ -100,7 +100,7 @@ class SaleTest extends TestCase
         {
             $response->dump();
         }
-
+        sleep(1);
         $response->assertStatus(201);
         $response->assertJsonStructure(['id', 'name', 'discount', 'expired_at']);
     }
@@ -116,7 +116,7 @@ class SaleTest extends TestCase
         ]);
         
         $response = $this->post('/api/sale', $sale);
-
+        sleep(1);
         $response->assertStatus(422); 
     }
 
@@ -129,7 +129,7 @@ class SaleTest extends TestCase
         $expectedCount = Sale::count();
 
         $response = $this->get('/api/sales');
-
+        sleep(1);
         $response->assertStatus(200);
         $response->assertJsonCount($expectedCount);
     }
