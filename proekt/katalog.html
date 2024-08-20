@@ -9,57 +9,174 @@
        <link rel="stylesheet" href="css/katalog.css">
        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
        <style>
-              #okno {
-                     width: 70%;
+              #okno 
+              {
+                     width: 80%;
+                     max-width: 400px;
                      height: auto;
                      text-align: center;
-                     padding: 5% 10% 29% 10%;
-                     border: 1px solid #aaaaaa;
-                     border-radius: 5px;
-                     color: #87834e;
+                     padding: 20px;
+                     border-radius: 10px;
+                     color: #333;
                      display: none;
                      position: fixed;
                      top: 50%;
                      left: 50%;
                      transform: translate(-50%, -50%);
-                     background-color: #fff;
+                     background: #7e9c9c;
+                     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
                      z-index: 1000;
+                     transition: opacity 0.3s ease, transform 0.3s ease;
               }
-
-              #oknoText {
-                     padding: 2%;
+       
+              #okno.show 
+              {
+                     display: block;
+                     opacity: 1;
+                     transform: translate(-50%, -50%) scale(1);
               }
-
+       
+              #okno.hide 
+              {
+                     opacity: 0;
+                     transform: translate(-50%, -50%) scale(0.9);
+              }
+       
+              #oknoText 
+              {
+                     font-size: 16px;
+                     margin-bottom: 15px;
+              }
+       
               #kontakty_password,
-              #kontakty_email {
-                     width: 50%;
+              #kontakty_email 
+              {
+                     width: 100%;
                      height: 35px;
+                     margin-bottom: 15px;
+                     padding: 0 10px;
+                     border: 1px solid #ddd;
+                     border-radius: 5px;
               }
-
-              .header_menu {
+              .input-field
+              {
+                   background-color:rgb(255, 253, 253);
+              }
+              .OKNO
+              {
+                   background-color:#7e9c9c;
+              }
+              .header_menu 
+              {
                      display: flex;
                      align-items: center;
               }
-
-              .close {
+       
+              .close 
+              {
                      position: absolute;
                      top: 10px;
                      right: 10px;
                      cursor: pointer;
+                     width: 24px;
+                     height: 24px;
               }
-
-              .modal-open {
+              .icon
+              {
+                   width: 40%;
+                   height: 40%;
+              } 
+              
+       
+              .modal-open 
+              {
                      cursor: pointer;
+                     color: #020202;
+                     text-decoration: underline;
               }
-
-              #loading {
+       
+              #loading 
+              {
                      text-align: center;
                      margin: 20px;
               }
+       
+              .button 
+              {
+                     display: inline-block;
+                     padding: 10px 20px;
+                     margin-top: 10px;
+                     border: none;
+                     border-radius: 5px;
+                     background-color: #0b0b0b;
+                     color: #fff;
+                     font-size: 16px;
+                     cursor: pointer;
+                     transition: background-color 0.3s ease;
+              }
+       
+              .button:hover 
+              {
+                     background-color: #0056b3;
+              }
+       
+              .button:focus 
+              {
+                     outline: none;
+              }
+
+              .modal_reviews
+              {
+                    background-color: #eeeeee; 
+              }
+              .modal 
+              {
+                     display: none; 
+                     position: fixed; 
+                     z-index: 1000; 
+                     left: 0;
+                     top: 0;
+                     width: 100%; 
+                     height: 100%; 
+                     overflow: auto; 
+                     background-color: rgba(0, 0, 0, 0.8);
+              }
+
+              .modal-content 
+              {
+                     background-color: #eeeeee;
+                     margin: 10% auto; 
+                     padding: 20px;
+                     border: 1px solid #888;
+                     width: 50%; 
+                     border-radius: 10px;
+                     position: relative;
+              }
+
+              .close 
+              {
+                     color: #aaa;
+                     position: absolute;
+                     top: 10px;
+                     right: 25px;
+                     font-size: 30px;
+                     font-weight: bold;
+                     cursor: pointer;
+              }
+
+              .close:hover,
+              .close:focus 
+              {
+                     color: black;
+                     text-decoration: none;
+              }
+
        </style>
+
        <script>
            $(document).ready(function () {
-                     function fetchProducts(url) {
+                     function fetchProducts(url) 
+                     {
                             $('#loading').show();
                             $.ajax({
                                    url: url,
@@ -72,9 +189,11 @@
                                                  html = '<p>Нет товаров</p>';
                                           } else {
                                                  $.each(data, function (index, value) {
-                                                        html += '<div class="Con1BLOCK">' +
+                                                        if(value.count>0)
+                                                        {
+                                                           html += '<div class="Con1BLOCK">' +
                                                                '<div class="Con1Pokryvalo">' +
-                                                               '<img src="img/img1.jpeg" id="imgT" class="Con1Img" alt="">' +
+                                                               '<img src = "http://localhost:8080/storage/' + value.img + '" id="imgT" class="Con1Img" alt="">' +
                                                                '<div class="CPT1">' +
                                                                '<p class="aft">' + value.overview + '</p>' +
                                                                '</div>' +
@@ -82,27 +201,32 @@
                                                                '<p class="Con1Text1 name1">' + value.name + '</p>' +
                                                                '<p class="Con1Text2 price1">' + value.price + '</p>' +
                                                                '<button class="designB1 Con1Text3" data-id="' + value.id + '" data-name="' + value.name + '" data-price="' + value.price + '">Добавить в корзину</button>' +
+                                                               '<button class="designB2 reviewsButton" data-id="' + value.id + '">Отзывы</button>' + 
                                                                '</div>';
-                                                        console.log(value.id);
+                                                           console.log(value.id);
+                                                        }
                                                  });
                                           }
                                           $("#products").html(html);
                                    },
-                                   error: function () {
+                                   error: function () 
+                                   {
                                           $('#loading').hide();
                                           $("#products").html('<p>Ошибка при загрузке данных</p>');
                                    }
                             });
                      }
 
-                     function updateCartIcon() {
+                     function updateCartIcon() 
+                     {
                             const cart = JSON.parse(localStorage.getItem("cart")) || [];
                             $('#divKorzina').find('span').remove();
                             $('#divKorzina').append(`<span>${cart.length}</span>`);
                             console.log('Cart icon updated. Cart length:', cart.length);
                      }
 
-                     function updateAuthLinks() {
+                     function updateAuthLinks() 
+                     {
                             const token = localStorage.getItem('token');
                             console.log('Token:', token);
                             if (token) {
@@ -111,6 +235,7 @@
                                           console.log('Logging out...');
                                           localStorage.removeItem('token');
                                           localStorage.removeItem('userId');
+                                          localStorage.removeItem('cart');
                                           updateAuthLinks();
                                    });
                                    getUserData(token);
@@ -145,7 +270,8 @@
                                               localStorage.setItem('userId', response.user_id);
                                               handleCart(response.user_id);
                                        }
-                                       else {
+                                       else 
+                                       {
                                               console.error('No user found with the given token.');
                                        }
                                 },
@@ -184,20 +310,25 @@
                             };
                             let cart = JSON.parse(localStorage.getItem("cart")) || [];
                             const existingItem = cart.find(i => i.id === item.id);
-                            if (existingItem) {
-                                   existingItem.count += 1;
-                            } else {
-                                   cart.push(item);
+                            if (existingItem) 
+                            {
+                                existingItem.count += 1;
+                            } 
+                            else 
+                            {
+                                cart.push(item);
                             }
                             localStorage.setItem("cart", JSON.stringify(cart));
                             updateCartIcon();
                      });
 
-                     $('.close').on('click', function () {
+                     $('.close').on('click', function () 
+                     {
                             $('#okno').hide();
                      });
 
-                     $('#but').on('click', function () {
+                     $('#but').on('click', function () 
+                     {
                             const email = $('#kontakty_email').val();
                             const password = $('#kontakty_password').val();
 
@@ -208,25 +339,75 @@
                                           email: email,
                                           password: password
                                    },
-                                   success: function (response) {
+                                   success: function (response) 
+                                   {
                                           console.log('Login successful. Token:', response.token);
                                           localStorage.setItem('token', response.token);
                                           $('#okno').hide();
                                           updateAuthLinks();
                                    },
-                                   error: function () {
+                                   error: function () 
+                                   {
                                           alert('Неверный email или пароль');
                                    }
                             });
                      });
 
-                     window.addEventListener('storage', function (e) {
-                            if (e.key === 'token') {
+                     window.addEventListener('storage', function (e) 
+                     {
+                            if (e.key === 'token') 
+                            {
                                    console.log('Token changed in another tab:', e.newValue);
                                    updateAuthLinks();
                             }
                      });
-              });
+              }); 
+
+                $(document).on('click', '.reviewsButton', function () 
+                {
+                            const productId = $(this).data('id');
+                            $('#reviewsList').empty();
+                            $('#reviewsModal').show();
+                            $.ajax({
+                                   url: `http://localhost:8080/api/reviews/${productId}`,
+                                   method: 'GET',
+                                   dataType: 'json',
+                                   success: function (data) {
+                                          if (data.length === 0) {
+                                                 $('#reviewsList').html('<p>Нет отзывов</p>');
+                                          } else {
+                                                 let reviewsHtml = '';
+                                                 data.forEach(function (review) 
+                                                 {
+                                                        reviewsHtml += `<div class="review-item">
+                                                               <p><strong>Пользователь:</strong> ${review.user_id}</p>
+                                                               <p><strong>Оценка:</strong> ${review.grade}/5</p>
+                                                               <p><strong>Комментарий:</strong> ${review.text}</p>
+                                                               <hr>
+                                                               </div>`;
+                                                 });
+                                                 $('#reviewsList').html(reviewsHtml);
+                                          }
+                                   },
+                                   error: function () 
+                                   {
+                                          $('#reviewsList').html('<p>Ошибка при загрузке отзывов</p>');
+                                   }
+                            });
+                     });
+
+                     $(document).on('click', '.close', function () 
+                     {
+                            $('#reviewsModal').hide();
+                     });
+
+                     $(window).on('click', function (event) 
+                     {
+                            if ($(event.target).hasClass('modal')) 
+                            {
+                                   $('#reviewsModal').hide();
+                            }
+               });
 
        </script>
 </head>
@@ -242,18 +423,18 @@
                             <p class="Tback">КАТАЛОГ</p>
                      </div>
                      <div class="divKorzina" id="divKorzina">
-                            <a href="korzina.html"><img src="img/корзина.png" class="korzina" id="korzina"></a>
                             <div id="okno" class="Okno">
                                    <h1 class="OKNO">Авторизоваться</h1>
                                    <p class="OKNO" id="oknoText">e-mail:</p>
-                                   <input type="email" id="kontakty_email"><br>
+                                   <input type="email" id="kontakty_email" class="input-field"><br>
                                    <p class="OKNO" id="oknoText">password:</p>
-                                   <input type="password" id="kontakty_password"><br>
-                                   <input type="button" value="ВОЙТИ" id="but"><br>
-                                   <a href="#" class="close"><img src="img/close.png" alt="Закрыть"></a>
+                                   <input type="password" id="kontakty_password" class="input-field"><br>
+                                   <button id="but" class="button">ВОЙТИ</button><br>
+                                   <a href="#" class="close"><img src="img/close.png" class = "icon" alt="Закрыть"></a>
                             </div>
                             <a href="#" class="header_t modal-open" id="login-btn">Войти</a>
                             <a href="#" class="header_t" id="logout-btn" style="display:none;">Выйти</a>
+                            <a href="korzina.html"><img src="img/корзина.png" class="korzina" id="korzina"></a>
                      </div>
               </div>
               <div class="verhushka">
@@ -274,6 +455,17 @@
        <div class="container1" id="products">
               <!-- Продукты будут загружены здесь -->
        </div>
+       
+       <div id="reviewsModal" class="modal">
+              <div class="modal-content">
+                     <span class="close">&times;</span>
+                     <h2 class = "modal_reviews">Отзывы</h2>
+                     <div id="reviewsList" class = "modal_reviews">
+                            <!-- Здесь будут отображаться отзывы -->
+                     </div>
+              </div>
+       </div>
+
        <footer>
               <hr width="100%">
               <div class="Footer">

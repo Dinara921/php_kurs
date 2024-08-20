@@ -12,7 +12,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Inter', sans-serif;
-    background: #fffdfa;
+    background: #a7b5b8;;
 }
 a
 {
@@ -36,7 +36,7 @@ a
     font-size: 100%;
     align-items: center;
     display: flex;
-    color: #87834e;
+    color: #040404;
 }
 .divKorzina
 {
@@ -50,7 +50,7 @@ a
 }
 .Tback
 {
-    color: #87834e;
+    color: #000000;
 }
 .backI
 {
@@ -70,7 +70,7 @@ a
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #87834e;
+    color: #171717;
 }
 .Verhushka
 {
@@ -108,7 +108,7 @@ a
     width: 30%;
     font-size: 90%;
     margin-bottom: 5%;
-    border: 2px solid #87834e52;
+    border: 2px solid #06060352;
     border-radius: 10px;
     padding: 1%;
 }
@@ -119,7 +119,17 @@ a
 .Con1Text3
 {
     width: 50%;
-    border: 2px solid #87834e52;
+    border: 2px solid #171d1e52;
+    text-align: center;
+    border-radius: 2px;
+    padding: 2%;
+    background: #87834e27;
+    font-size: 80%;
+}
+.reviewsButton
+{
+    width: 50%;
+    border: 2px solid #171d1e52;
     text-align: center;
     border-radius: 2px;
     padding: 2%;

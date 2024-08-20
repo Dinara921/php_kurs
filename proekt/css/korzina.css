@@ -13,12 +13,26 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Inter', sans-serif;
-    background: #fffdfa;
+    background: #a7b5b8;;
 }
 a
 {
     text-decoration: none;
     color: #202336;
+}
+.blockMenu 
+{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.divZakaz
+{
+    margin-right: 100px;
+    display: flex;
 }
 .back
 {
@@ -30,11 +44,11 @@ a
     font-size: 100%;
     align-items: center;
     display: flex;
-    color: #87834e;
+    color: #333
 }
 .Tback
 {
-    color: #87834e;
+    color: #333;
 }
 .backI
 {
@@ -69,7 +83,7 @@ a
 .verhushka1
 {
     width: 20%;
-    border: 1px solid rgb(9, 9, 10);
+    border: 1px solid #3d3d3a;
     padding: 1%;
     font-family: 'Roboto Condensed', sans-serif;
     font-weight: 400;
@@ -96,7 +110,7 @@ a
     display: flex;
     justify-content: space-between;
     text-align: center;
-    background: #87834e6d;
+    background: #1f222352;;
 }
 
 .imgBl
@@ -119,6 +133,34 @@ a
     text-align: left;
 }
 .Bl1Text
+{
+    width: 45%;
+    font-family: 'Raleway', sans-serif;
+    background: #87834e00;
+    color: #fffdfa;
+}
+.Bl1Summa
+{
+    width: 45%;
+    font-family: 'Raleway', sans-serif;
+    background: #87834e00;
+    color: #fffdfa;
+}
+.Bl1Date 
+{
+    width: 45%;
+    font-family: 'Raleway', sans-serif;
+    background: #87834e00;
+    color: #fffdfa;
+}
+.Bl1Status
+{
+    width: 45%;
+    font-family: 'Raleway', sans-serif;
+    background: #87834e00;
+    color: #fffdfa;
+}
+.Bl1B 
 {
     width: 45%;
     font-family: 'Raleway', sans-serif;
@@ -167,7 +209,64 @@ a
 .tovaryP2 .name-class 
 {
     flex-basis: 45%;
-    margin-right: 10px; /* Устанавливаем отступ справа между pID и pName */
+    margin-right: 10px; 
+}
+button.order-button {
+    background-color: #4CAF50;
+    border: none;
+    /* Убираем границу */
+    color: white;
+    /* Белый текст */
+    padding: 10px 20px;
+    /* Отступы */
+    text-align: center;
+    /* Выравнивание текста по центру */
+    text-decoration: none;
+    /* Убираем подчеркивание текста */
+    display: inline-block;
+    /* Инлайн-блок для ширины */
+    font-size: 16px;
+    /* Размер шрифта */
+    margin: 4px 2px;
+    /* Отступы */
+    cursor: pointer;
+    /* Курсор в виде руки */
+    border-radius: 5px;
+    /* Скругленные углы */
+    transition: background-color 0.3s, transform 0.2s;
+    /* Плавные переходы */
+}
+
+button.detailOrder {
+    background-color: #4CAF50;
+}
+
+button.detailOrder:hover {
+    background-color: #45a049;
+}
+
+button.detailOrder:active {
+    background-color: #397d3c;
+}
+
+button.cancelOrder {
+    background-color: #f44336;
+}
+
+button.cancelOrder:hover {
+    background-color: #e53935;
+}
+
+button.cancelOrder:active {
+    background-color: #c62828;
+}
+
+.order-item {
+    padding: 2% 0 2% 2%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
 }
 .Summa
 {

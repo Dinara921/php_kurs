@@ -9,106 +9,124 @@
   <link rel="stylesheet" href="css/korzina.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
-    #okno {
-      width: 60%;
-      height: 85%;
+    #okno 
+    {
+      width: 80%;
+      max-width: 500px;
+      height: auto;
       text-align: center;
-      padding: 3%;
-      border: 1px solid #aaaaaa;
-      border-radius: 5px;
-      color: #87834e;
+      padding: 2%;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      color: #333;
       display: none;
       position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      margin: auto;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
-    #kontakty_adress
+  
+    #okno h1 
     {
-      width: 50%;
+      font-size: 1.5em;
+      margin-bottom: 1em;
+      color: #555;
     }
-
-    input[type="textarea"] {
-      resize: both;
+  
+    #okno p 
+    {
+      font-size: 0.9em;
+      margin: 0.5em 0;
     }
-
-    input {
-      width: 50%;
-      border-radius: 2px;
-      padding: 1%;
-      font-size: 80%;
+    .OKNO
+    {
+      background-color: #f9f9f9;
     }
-
-    input[type="button"] {
-      margin: 2%;
-      width: 50%;
-      border: 2px solid #87834e52;
+    input[type="email"],
+    input[type="password"],
+    input[type="text"],
+    input[type="tel"],
+    textarea {
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 10px;
+      margin-bottom: 1em;
+      font-size: 0.9em;
+      box-sizing: border-box;
+    }
+  
+    input[type="button"] 
+    {
+      width: 100%;
+      border: none;
+      border-radius: 4px;
+      padding: 10px;
+      background-color: #333;
+      color: #fff;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+  
+    input[type="button"]:hover 
+    {
+      background-color: #555;
+    }
+  
+    textarea 
+    {
+      resize: vertical;
+      min-height: 100px;
+    }
+  
+    .close img 
+    {
+      width: 20px;
+      vertical-align: middle;
+    }
+  
+    .zakaz 
+    {
+      display: inline-block;
+      padding: 10px 20px;
+      border: 1px solid #333;
+      border-radius: 4px;
+      background-color: #333;
+      color: #fff;
+      text-decoration: none;
+      font-size: 1em;
       text-align: center;
-      border-radius: 2px;
-      padding: 1%;
-      background: #87834e27;
-      font-size: 80%;
+      margin-top: 1em;
+      cursor: pointer;
     }
-
-    #okno:target {
-      display: block;
-    }
-
-    @media (min-width: 769px) and (max-width: 990px) {
-      #okno {
-        width: 60%;
-        height: 45%;
-      }
-    }
-
-    @media (min-width: 699px) and (max-width: 769px) {
-      #okno {
-        width: 70%;
-        height: 40%;
-      }
-    }
-
-    @media (min-width: 558px) and (max-width: 699px) {
-      #okno {
-        width: 90%;
-        height: 10%;
-        margin: 10% 0 0 6%;
-      }
-    }
-
-    @media (min-width: 455px) and (max-width: 558px) {
-      #okno {
-        width: 90%;
-        height: 13%;
-        margin: 10% 0 0 6%;
-      }
-    }
-
-    @media (min-width: 390px) and (max-width: 455px) {
-      #okno {
-        width: 90%;
-        height: 15%;
-        margin: 10% 0 0 6%;
-      }
+  
+    .zakaz:hover 
+    {
+      background-color: #555;
     }
   </style>
 </head>
 
 <body>
   <header>
-    <div class="back">
-      <a href="konstruktor.html">
-        <p class="Tback">ГЛАВНАЯ</p>
-      </a>
-      <img src="img/back.png" class="backI">
-      <a href="katalog.html">
-        <p class="Tback">КАТАЛОГ</p>
-      </a>
-      <img src="img/back.png" class="backI">
-      <p class="Tback">КОРЗИНА</p>
-    </div>
+    <div class="blockMenu">
+        <div class="back">
+          <a href="konstruktor.html">
+            <p class="Tback">ГЛАВНАЯ</p>
+          </a>
+          <img src="img/back.png" class="backI">
+          <a href="katalog.html">
+            <p class="Tback">КАТАЛОГ</p>
+          </a>
+          <img src="img/back.png" class="backI">
+          <p class="Tback">КОРЗИНА</p>
+        </div>
+        <div class="divZakaz" id="divZakaz">
+          <a href="myzakaz.html" class="header_t"  id="myZ" style="display:none"><p class="Tback">Мои заказы</p></a>
+        </div>
+        </div>
   </header>
   <div id="Container" class="Container">
     <div class="Con1BLOCK">
@@ -123,7 +141,7 @@
   <div class="blockS">
     <div id="Summa" class="Summa">Итого: 0.00 KZT</div>
     <div id="okno" class="Okno">
-      <h1 class="OKNO">ОФОРМЛЕНИЕ ЗАКАЗА</h1>
+      <h1 class="OKNO">РЕГИСТРАЦИЯ</h1>
       <p class="OKNO">Заполните форму, консультант предварительно с вами свяжется, <br> для подтверждения заказа!</p>
       <p class="OKNO">e-mail:</p>
       <input type="email" id="kontakty_email"><br>
@@ -136,15 +154,40 @@
       <p class="OKNO">Телефон:</p>
       <input type="tel" placeholder="+7 телефон" id="kontakty_phone" value="+7">
       <input type="button" value="ЗАКАЗАТЬ" id="butCart"><br>
-      <a href="#" class="close"><img src="img/close.png" alt="Закрыть"></a>
+      <a href="#" class="close"><img src="img/close.png" id = "closeBut" alt="Закрыть"></a>
     </div>
     <a href="#okno" class="zakaz" id="zakaz">Оформить заказ</a>
   </div>
   <script>
     //clearCart();
+      var hours = 1; 
+      var now = new Date().getTime();
+      var setupTime = localStorage.getItem('setupTime');
+      if (setupTime == null) 
+      {
+        localStorage.setItem('setupTime', now)
+      } 
+      else 
+      {
+        if (now - setupTime > hours * 60 * 60 * 1000) 
+        {
+          localStorage.clear()
+          localStorage.setItem('setupTime', now);
+        }
+      }
     const token = localStorage.getItem('token');
+    $('#myZ').show();
+    if (!token) 
+    {
+        localStorage.removeItem('userId');
+        $('#myZ').hide();
+    }
     let userId = localStorage.getItem('userId');
-    let orderId = localStorage.getItem('orderId'); // Объявляем переменную
+    if (!userId) 
+    {
+        localStorage.removeItem('orderId');
+    } 
+    let orderId = localStorage.getItem('orderId');
     console.log('Token:', token);
     console.log('User ID:', userId);
     console.log('Order ID:', orderId); 
@@ -157,7 +200,8 @@
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     let priceT = 0;
 
-    if (cart.length > 0 && token) {
+    if (cart.length > 0 && token) 
+    {
       console.log('Запустился изменение айди');
       cart = cart.map(item => {
         if ('product_id' in item) 
@@ -177,14 +221,16 @@
 
       //localStorage.setItem('cart', JSON.stringify(cart));
     }
+
     function clearCart() 
     {
         localStorage.removeItem('cart');
         cart = [];
         updateCartDisplay(); 
-      }
-    function createCartItem(item, index) 
-    {
+    }
+
+  function createCartItem(item, index) 
+  {
         const tovar = $('<div class="tovaryP2"></div>');
 
         $('<p class="id-class"></p>').text(index + 1).appendTo(tovar);
@@ -197,15 +243,22 @@
           if (newCount > 0) 
           {
             item.count = newCount;
-            updateCartDisplay();
+
             if (orderId) 
             {
               await saveCartDetail(orderId, item);
             } 
             else 
             {
-              localStorage.setItem('cart', JSON.stringify(cart));
+              let cart = JSON.parse(localStorage.getItem('cart')) || [];
+              const itemIndex = cart.findIndex(cartItem => cartItem.id === item.id);
+              if (itemIndex > -1) {
+                cart[itemIndex] = item;
+                localStorage.setItem('cart', JSON.stringify(cart));
+              }
             }
+
+            updateCartDisplay();
           } 
           else 
           {
@@ -216,8 +269,7 @@
 
         $('<p></p>').text((item.price * item.count).toFixed(2) + ' KZT').appendTo(tovar);
 
-        const imgGarbage = $('<img>').attr('src', 'img/garbage.png').addClass('imgBl').click(function () 
-        {
+        const imgGarbage = $('<img>').attr('src', 'img/garbage.png').addClass('imgBl').click(function () {
           removeCartItem(item);
         });
         imgGarbage.appendTo(tovar);
@@ -227,50 +279,57 @@
 
     function updateCartDisplay() 
     {
-      const tovarContainer = $('#tovaryP');
-      tovarContainer.empty();
+        console.log("updateCartDisplay");
+        const tovarContainer = $('#tovaryP');
+        tovarContainer.empty();
+        let priceT = 0;
 
-      priceT = 0;
+        const token = localStorage.getItem('token');
+        const orderId = localStorage.getItem('orderId');
 
-      if (token && orderId) 
-      {
-        $.ajax({
-          url: `http://localhost:8080/api/orderDetails/${orderId}`,
-          headers: { 'Authorization': `Bearer ${token}` },
-          success: function (data) {
-            console.log('Data from API:', data);
-            fromDatabase = true; 
-            tovarContainer.empty();
-            data.forEach((item, index) => {
-              const cartItemElement = createCartItem(item, index);
-              tovarContainer.append(cartItemElement);
-              priceT += item.price * item.count;
-            });
+        if (token && orderId) {
+          $.ajax({
+            url: `http://localhost:8080/api/orderDetails/${orderId}`,
+            headers: { 'Authorization': `Bearer ${token}` },
+            success: function (data) {
+              console.log('Data from API orderDetails:', data);
+              tovarContainer.empty();
+              data.forEach((item, index) => {
+                const cartItemElement = createCartItem(item, index);
+                tovarContainer.append(cartItemElement);
+              });
+            },
+            error: function (error) {
+              console.error('Ошибка при получении данных orderDetails:', error);
+            }
+          });
 
-            Summa.text('Итого: ' + priceT.toFixed(2) + ' KZT');
+          $.ajax({
+            url: `http://localhost:8080/api/order/${orderId}`,
+            headers: { 'Authorization': `Bearer ${token}` },
+            success: function (data) {
+              priceT = data.summa;
+              Summa.text('Итого: ' + priceT.toFixed(2) + ' KZT');
+            },
+            error: function (error) {
+              console.error('Ошибка при получении данных заказа:', error);
+            }
+          });
+        } else {
+          const cart = JSON.parse(localStorage.getItem('cart')) || [];
+          cart.forEach((item, index) => {
+            const cartItemElement = createCartItem(item, index);
+            tovarContainer.append(cartItemElement);
+            priceT += item.price * item.count;
+          });
 
-            localStorage.setItem('cart', JSON.stringify(data));
-          },
-          error: function (error) 
-          {
-            console.error('Ошибка при получении данных:', error);
-          }
-        });
-      } 
-      else 
-      {
-        fromDatabase = false;
-        cart.forEach((item, index) => {
-          const cartItemElement = createCartItem(item, index);
-          tovarContainer.append(cartItemElement);
-          priceT += item.price * item.count;
-        });
-
-        Summa.text('Итого: ' + priceT.toFixed(2) + ' KZT');
-      }
+          Summa.text('Итого: ' + priceT.toFixed(2) + ' KZT');
+        }
     }
 
-    async function removeCartItem(orderDetailId) {
+
+    async function removeCartItem(orderDetailId) 
+    {
         console.log(orderDetailId);
         const token = localStorage.getItem('token');
 
@@ -285,7 +344,8 @@
                 }
               });
 
-            if (!response.ok) {
+            if (!response.ok) 
+            {
               throw new Error(`Error deleting order detail: ${response.statusText}`);
             }
 
@@ -298,7 +358,7 @@
             }
 
             clearCart();
-            await fetchExistingOrder();
+            //await fetchExistingOrder();
           }
           catch (error) 
           {
@@ -307,20 +367,13 @@
         }
         else 
         {
-          cart = cart.filter(cart => cart.id !== orderDetailId.id); // Используем правильное значение для фильтрации
+          cart = cart.filter(cart => cart.id !== orderDetailId.id); 
           localStorage.setItem('cart', JSON.stringify(cart));
           console.log('Item removed from localStorage:', orderDetailId.id);
 
           updateCartDisplay();
         }
       }
-
-    function calculateCartSum() 
-    {
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        return cart.reduce((sum, item) => sum + (item.price * item.count), 0);
-        console.log(cart.reduce((sum, item) => sum + (item.price * item.count), 0));
-    }
 
     async function fetchExistingOrder() 
     {
@@ -338,30 +391,42 @@
 
           if (!response.ok) 
           {
-            throw new Error(`Ошибка при получении заказа: ${response.statusText}`);
+            throw new Error(`Ошибка при получении заказов: ${response.statusText}`);
           }
 
-          const orders = await response.json();
-          console.log('Orders:', orders);
+          const result = await response.json();
+          console.log('API Response:', result);
 
-          if (orders && orders.id) 
+          const orders = Array.isArray(result.orders) ? result.orders : result;
+
+          if (!Array.isArray(orders)) 
           {
-            orderId = orders.id;
+            throw new Error('Полученные данные не являются массивом заказов');
+          }
+
+          const openOrder = orders.find(order => order.status === 1);
+          console.log(openOrder);
+          if (openOrder) 
+          {
+            orderId = openOrder.id;
+            console.log("Открытый заказ найден: " + orderId);
             localStorage.setItem('orderId', orderId);
             await fetchOrderDetails(orderId);
           } 
           else 
           {
+            console.log("Открытый заказ не найден. Создаем новый.");
+
             const data = 
             {
               user_id: userId,
-              status: 1,
-              summa: calculateCartSum() 
+              status: 1
             };
 
             const createOrderResponse = await fetch('http://localhost:8080/api/order', {
               method: 'POST',
-              headers: {
+              headers: 
+              {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
               },
@@ -374,7 +439,7 @@
             }
 
             const newOrder = await createOrderResponse.json();
-            console.log('New Order:', newOrder);
+            console.log('Новый заказ создан:', newOrder);
 
             if (newOrder && newOrder.id) 
             {
@@ -384,7 +449,6 @@
             }
           }
         } 
-        
         catch (error) 
         {
           console.error('Ошибка при обработке заказа:', error);
@@ -397,14 +461,17 @@
         console.log('Запустился fetchOrderDetails - orderId:', orderId);
         const token = localStorage.getItem('token');
 
-        try {
+        try 
+        {
           const response = await fetch(`http://localhost:8080/api/orderDetails/${orderId}`, {
-            headers: {
+            headers: 
+            {
               'Authorization': `Bearer ${token}`
             }
           });
 
-          if (!response.ok) {
+          if (!response.ok) 
+          {
             throw new Error('Error fetching order details');
           }
 
@@ -423,9 +490,8 @@
           console.log('Обновление корзины:', combinedCart);
 
           localStorage.setItem('cart', JSON.stringify(combinedCart));
-          updateCartDisplay();
+          //updateCartDisplay();
 
-          // Вызов сохранения деталей корзины
           await Promise.all(combinedCart.map(item => saveCartDetail(orderId, item)));
         } 
         catch (error) 
@@ -440,15 +506,16 @@
   async function saveCartDetail(orderId, item) 
   {
       const token = localStorage.getItem('token');
-      const data = {
+      const data = 
+      {
         order_id: orderId,
         product_id: item.product_id,
         count: item.count,
         price: item.price
       };
-
       try {
-        const response = await fetch('http://localhost:8080/api/orderDetail/checkOnly', {
+        const response = await fetch('http://localhost:8080/api/orderDetail/checkOnly', 
+        {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -457,7 +524,8 @@
           body: JSON.stringify(data)
         });
 
-        if (!response.ok) {
+        if (!response.ok) 
+        {
           throw new Error(`Error saving order detail: ${response.statusText}`);
         }
 
@@ -465,7 +533,7 @@
         console.log('Response from API:', responseData);
 
         clearCart();
-        updateCartDisplay();
+        //updateCartDisplay();
       } 
       catch (error) 
       {
@@ -475,22 +543,27 @@
 
     $(document).ready(async function () 
     {
-        updateCartDisplay();
-        if (token && !userId) {
-          const tokenResponse = await fetch('http://localhost:8080/api/user', 
-          {
-            method: 'GET',
-            headers: { 'Authorization': `Bearer ${token}` }
-          });
-          if (tokenResponse.ok) 
-          {
-            const user = await tokenResponse.json();
-            userId = user.id;
-            localStorage.setItem('userId', userId);
-          }
+        if(!token)
+        {
+          updateCartDisplay();
         }
+        // if (token && userId) 
+        // {      
+        //   const tokenResponse = await fetch('http://localhost:8080/api/user', 
+        //   {
+        //     method: 'GET',
+        //     headers: { 'Authorization': `Bearer ${token}` }
+        //   });
+        //   if (tokenResponse.ok) 
+        //   {
+        //     const user = await tokenResponse.json();
+        //     userId = user.id;
+        //     localStorage.setItem('userId', userId);
+        //   }
+        // }
         if (userId) 
-          {
+        {
+            $('#loading').show();
             await fetchExistingOrder();
             let localCart = JSON.parse(localStorage.getItem('cart')) || [];
             console.log('Local cart items:', localCart);
@@ -511,138 +584,185 @@
             }
         }
       });
+
 //кнопка
-      $(document).ready(async function () {
-          updateCartDisplay();
+    $(document).ready(async function () 
+    {
+        $('#closeBut').click(async function (event) 
+        {
+          $('#okno').hide();
+        });
 
-          // Обработка кнопки "Оформить заказ"
-          $('#zakaz').click(async function (event) 
+        $('#zakaz').click(async function (event) 
+        {
+          event.preventDefault();
+
+          const token = localStorage.getItem('token');
+          const orderId = localStorage.getItem('orderId');
+
+          if (token) 
           {
-            event.preventDefault(); // Предотвращаем переход по ссылке
-
-            const token = localStorage.getItem('token');
-            const cartSum = calculateCartSum(); // Расчёт суммы корзины
-
-            if (token) 
+            if (orderId) 
             {
-              // Пользователь авторизован, обновляем статус заказа
-              if (orderId) 
-              {
-                await updateOrderStatus(orderId, userId, cartSum); // Передаём сумму заказа
-              } 
-              else 
-              {
-                console.error('Отсутствует orderId');
-              }
+              const userId = localStorage.getItem('userId');
+              await updateOrderStatus(orderId, userId);
             } 
             else 
             {
-              // Пользователь не авторизован, показываем форму регистрации
-              $('#okno').show();
+              console.error('Отсутствует orderId');
             }
-          });
-
-          // Обработка кнопки "ЗАКАЗАТЬ" в форме
-          $('#butCart').click(async function () {
-            const email = $('#kontakty_email').val();
-            const password = $('#kontakty_password').val();
-            const name = $('#kontakty_name').val();
-            const address = $('#kontakty_adress').val();
-            const phone = $('#kontakty_phone').val();
-
-            try {
-              // Регистрация пользователя
-              const registerResponse = await fetch('http://localhost:8080/api/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password, name, address, phone })
-              });
-
-              if (!registerResponse.ok) {
-                throw new Error(`Ошибка регистрации: ${registerResponse.statusText}`);
-              }
-
-              // Логин пользователя
-              const loginResponse = await fetch('http://localhost:8080/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-              });
-
-              if (!loginResponse.ok) {
-                throw new Error(`Ошибка входа: ${loginResponse.statusText}`);
-              }
-
-              const loginData = await loginResponse.json();
-              localStorage.setItem('token', loginData.token);
-              localStorage.setItem('userId', loginData.userId);
-
-              // Создание нового заказа
-              const userId = loginData.userId;
-              const cartSum = calculateCartSum();
-              const createOrderResponse = await fetch('http://localhost:8080/api/order', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${loginData.token}`
-                },
-                body: JSON.stringify({
-                  user_id: userId,
-                  status: 2,
-                  summa: cartSum
-                })
-              });
-
-              if (!createOrderResponse.ok) {
-                throw new Error(`Ошибка создания заказа: ${createOrderResponse.statusText}`);
-              }
-
-              const newOrder = await createOrderResponse.json();
-              orderId = newOrder.id;
-              localStorage.setItem('orderId', orderId);
-
-              // Создание деталей заказа
-              const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-              await Promise.all(cartItems.map(item => saveCartDetail(orderId, item)));
-
-              // Очистка корзины
-              clearCart();
-              updateCartDisplay();
-              $('#okno').hide();
-            } catch (error) {
-              console.error('Ошибка при оформлении заказа:', error);
-            }
-          });
+          } 
+          else 
+          {
+            $('#okno').show();
+          }
         });
 
-        async function updateOrderStatus(orderId, userId, totaAmount) 
+        $('#butCart').click(async function () 
         {
-          console.log(status + ' ' + totaAmount);
-          const token = localStorage.getItem('token');
+          const email = $('#kontakty_email').val();
+          const password = $('#kontakty_password').val();
+          const name = $('#kontakty_name').val();
+          const address = $('#kontakty_adress').val();
+          const phone = $('#kontakty_phone').val();
+
+          if (password.length < 8) 
+          {
+            console.error('Пароль должен содержать не менее 8 символов');
+            return;
+          }
+
+          const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+          console.log(cartItems);
+
+          const hasInvalidItem = cartItems.some(item => !item.id || !item.count || !item.price);
+          
+          if (hasInvalidItem) 
+          {
+            console.error('Некоторые товары в корзине имеют недостающие поля');
+            return;
+          }
+
           try {
-            const response = await fetch(`http://localhost:8080/api/order/${orderId}`, 
-            {
-              method: 'PUT',
-              headers: {
+            let response = await fetch('http://localhost:8080/api/registerAndOrder', {
+              method: 'POST',
+              headers: 
+              {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Accept': 'application/json'
               },
-              body: JSON.stringify({ status:2, user_id: userId, summa: totaAmount })
+              body: JSON.stringify({
+                email,
+                password,
+                name,
+                address,
+                phone,
+                cartItems
+              })
             });
 
-            if (!response.ok) {
-              throw new Error(`Ошибка обновления заказа: ${response.statusText}`);
+             if (!response.ok) 
+             {
+              const errorData = await response.json();
+
+              if (response.status === 422 && errorData.errors) 
+              {
+                let errorMessage = 'Такой пользователь уже существует';
+                alert(errorMessage);
+              } 
+              else 
+              {
+                console.error('Ошибка при оформлении заказа:', errorData);
+                alert(`Ошибка: ${errorData.error || response.statusText}`);
+              }
+
+              throw new Error(`Ошибка: ${response.statusText}`);
             }
 
-            console.log('Статус заказа обновлен успешно');
-            clearCart();
-            updateCartDisplay();
-          } 
-          catch (error) 
+            const data = await response.json();
+            const { token, userId, orderId } = data;
+            localStorage.setItem('token', token);
+            localStorage.setItem('userId', userId);
+            localStorage.setItem('orderId', orderId);
+            const reduceResponse = await fetch(`http://localhost:8080/api/orderDetail/${orderId}/reduce`, {
+              method: 'POST',
+              headers: 
+              {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              }
+          });
+
+          if (!reduceResponse.ok) 
           {
-            console.error('Ошибка при обновлении заказа:', error);
+            const errorData = await reduceResponse.json();
+            console.error('Ошибка уменьшения количества товаров:', errorData);
+            throw new Error(`Ошибка уменьшения количества товаров: ${reduceResponse.statusText}`);
           }
+          console.log('Количество товаров обновлено успешно');
+          $('#okno').hide();
+          localStorage.removeItem('cart');
+          localStorage.removeItem('orderId');
+          Summa.text('Итого: ' + 0.00 + ' KZT');
+          clearCart();
+          console.log('Заказ оформлен'); 
+          
+        } 
+        catch (error) 
+        {
+          console.error('Ошибка при оформлении заказа:', error);
         }
+      });
+
+      async function updateOrderStatus(orderId, userId) 
+      {
+        const token = localStorage.getItem('token');
+        try 
+        {
+          const response = await fetch(`http://localhost:8080/api/order/${orderId}`, {
+            method: 'PUT',
+            headers: 
+            {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ status: 2, user_id: userId })
+          });
+
+          if (!response.ok) 
+          {
+            throw new Error(`Ошибка обновления заказа: ${response.statusText}`);
+          }
+
+          console.log('Статус заказа обновлен успешно');
+
+          const reduceResponse = await fetch(`http://localhost:8080/api/orderDetail/${orderId}/reduce`, {
+            method: 'POST',
+            headers: 
+            {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
+          if (!reduceResponse.ok) 
+          {
+            throw new Error(`Ошибка уменьшения количества товаров: ${reduceResponse.statusText}`);
+          }
+
+          console.log('Количество товаров обновлено успешно');
+
+          const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+          localStorage.removeItem('orderId');
+          Summa.text('Итого: ' + 0.00 + ' KZT');
+          clearCart();
+        } 
+        catch (error) 
+        {
+          console.error('Ошибка при обновлении заказа:', error);
+        }
+      }
+    });
   </script>
 </body>
 </html>

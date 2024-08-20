@@ -9,46 +9,124 @@
     <title>Главная</title>
     <script src="query.js"></script>
     <style>
-        #okno {
-            width: 70%;
-            height: auto;
-            text-align: center;
-            padding: 5% 10% 29% 10%;
-            border: 1px solid #aaaaaa;
-            border-radius: 5px;
-            color: #87834e;
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-    
-        #oknoText 
-        {
-            padding: 2%;
-        }
-    
-        #kontakty_password,
-        #kontakty_email 
-        {
-            width: 50%;
-            height: 35px;
-        }
-    
-        .header_menu {
-            display: flex;
-            align-items: center;
-        }
-    
-        .close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
+             #okno {
+                     width: 80%;
+                     max-width: 400px;
+                     height: auto;
+                     text-align: center;
+                     padding: 20px;
+                     border-radius: 10px;
+                     color: #333;
+                     display: none;
+                     position: fixed;
+                     top: 50%;
+                     left: 50%;
+                     transform: translate(-50%, -50%);
+                     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+                     z-index: 1000;
+                     transition: opacity 0.3s ease, transform 0.3s ease;  
+                     background-color: #7e9c9c;
+              }
+       
+              #okno.show 
+              {
+                     display: block;
+                     opacity: 1;
+                     transform: translate(-50%, -50%) scale(1);
+              }
+              .OKNO
+              {
+                  margin:3%;
+                  background-color: #7e9c9c;
+              }
+       
+              #okno.hide 
+              {
+                     opacity: 0;
+                     transform: translate(-50%, -50%) scale(0.9);
+              }
+       
+              #oknoText 
+              {
+                     font-size: 16px;
+                     margin-bottom: 15px;
+              }
+       
+              #kontakty_password,
+              #kontakty_email 
+              {
+                     width: 100%;
+                     height: 35px;
+                     margin-bottom: 15px;
+                     padding: 0 10px;
+                     border: 1px solid #ddd;
+                     border-radius: 5px;
+              }
+              .input-field
+              {
+                 background-color: #ddd;
+              }
+              .header_menu 
+              {
+                     display: flex;
+                     align-items: center;
+              }
+       
+              .close 
+              {
+                     position: absolute;
+                     top: 10px;
+                     right: 10px;
+                     cursor: pointer;
+                     width: 24px;
+                     height: 24px;
+              }
+              .icon
+              {
+                   width: 40%;
+                   height: 40%;
+              } 
+              
+              .modal-open 
+              {
+                     cursor: pointer;
+                     color: #007bff;
+                     text-decoration: underline;
+              }
+       
+              #loading 
+              {
+                     text-align: center;
+                     margin: 20px;
+              }
+       
+              .button 
+              {
+                     display: inline-block;
+                     padding: 10px 20px;
+                     margin-top: 10px;
+                     border: none;
+                     border-radius: 5px;
+                     background-color: #3b3b3b;
+                     color: #fff;
+                     font-size: 16px;
+                     cursor: pointer;
+                     transition: background-color 0.3s ease;
+              }
+       
+              .button:hover 
+              {
+                     background-color: #0056b3;
+              }
+       
+              .button:focus 
+              {
+                     outline: none;
+              }
     </style>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function () 
+        {
             function updateAuthLinks() 
             {
                 const token = localStorage.getItem('token');
@@ -59,6 +137,7 @@
                         console.log('Logging out...');
                         localStorage.removeItem('token');
                         localStorage.removeItem('userId');
+                        localStorage.removeItem('cart');
                         updateAuthLinks();
                     });
                     getUserData(token);
@@ -72,7 +151,8 @@
                 }
             }
 
-            function loginUser() {
+            function loginUser() 
+            {
                 const email = $('#kontakty_email').val();
                 const password = $('#kontakty_password').val();
 
@@ -83,7 +163,8 @@
                         email: email,
                         password: password
                     },
-                    success: function (response) {
+                    success: function (response) 
+                    {
                         console.log('Login successful. Token:', response.token);
                         localStorage.setItem('token', response.token);
                         $('#okno').hide();
@@ -140,7 +221,8 @@
                 }
             });
 
-            function handleScroll() {
+            function handleScroll() 
+            {
                 const images = document.querySelectorAll('.k_img, #kover-img, #image_container3, #image_container4');
                 images.forEach(image => {
                     const rect = image.getBoundingClientRect();
@@ -148,16 +230,19 @@
                         image.style.opacity = 1;
                         image.style.transform = "rotateX(0deg)";
                     }
-                });
+                   });
+                 }
+
+                window.addEventListener("scroll", handleScroll);
+                updateAuthLinks();
+            });
+
+            function openAndClose() 
+            {
+                    window.open('katalog.html', '_blank');
+                    window.close();
             }
 
-            window.addEventListener("scroll", handleScroll);
-            updateAuthLinks();
-        });
-        function openAndClose() {
-                window.open('katalog.html', '_blank');
-                window.close();
-            }
     </script>
     </head>
     <body>
@@ -172,11 +257,11 @@
                     <div id="okno" class="Okno">
                         <h1 class="OKNO">Авторизоваться</h1>
                         <p class="OKNO" id="oknoText">e-mail:</p>
-                        <input type="email" id="kontakty_email"><br>
+                        <input type="email" id="kontakty_email" class="input-field"><br>
                         <p class="OKNO" id="oknoText">password:</p>
-                        <input type="password" id="kontakty_password"><br>
-                        <input type="button" value="ВОЙТИ" id="but"><br>
-                        <a href="#" class="close"><img src="img/close.png" alt=""></a>
+                        <input type="password" id="kontakty_password" class="input-field"><br>
+                        <button id="but" class="button">ВОЙТИ</button><br>
+                        <a href="#" class="close"><img src="img/close.png" class="icon" alt="Закрыть"></a>
                     </div>
                     <a href="#" class="header_t" id="login-btn">Войти</a>
                     <a href="#" class="header_t" id="logout-btn" style="display:none;">Выйти</a>

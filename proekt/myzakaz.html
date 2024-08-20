@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина</title>
+    <link rel="stylesheet" href="css/korzina.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        #okno 
+        {
+            width: 60%;
+            height: 85%;
+            text-align: center;
+            padding: 3%;
+            border: 1px solid #aaaaaa;
+            border-radius: 10px;
+            color: #1a29cd;
+            background-color: rgba(124, 121, 121, 0.8); 
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); 
+        }
+
+        #okno h1 
+        {
+            font-size: 1.8em;
+            color:#12142c;
+            margin-bottom: 20px;
+        }
+
+        #orderDetailsContainer 
+        {
+            max-height: 60%;
+            overflow-y: auto;
+            text-align: left;
+        }
+
+        a.close img 
+        {
+            width: 20px;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            cursor: pointer;
+        }
+
+        .OKNO 
+        {
+            color:#12142c;
+            font-size: 1em;
+            margin-bottom: 10px;
+            background-color: rgba(233, 233, 233, 0.8); 
+        }
+
+        #kontakty_adress 
+        {
+            width: 50%;
+        }
+
+        input[type="textarea"] 
+        {
+            resize: both;
+        }
+
+        input 
+        {
+            width: 50%;
+            border-radius: 2px;
+            padding: 1%;
+            font-size: 80%;
+        }
+
+        input[type="button"] 
+        {
+            margin: 2%;
+            width: 50%;
+            border: 2px solid #87834e52;
+            text-align: center;
+            border-radius: 2px;
+            padding: 1%;
+            background: #87834e27;
+            font-size: 80%;
+        }
+
+        #okno:target 
+        {
+            display: block;
+        }
+
+        @media (min-width: 769px) and (max-width: 990px) 
+        {
+            #okno {
+                width: 60%;
+                height: 45%;
+            }
+        }
+
+        @media (min-width: 699px) and (max-width: 769px) 
+        {
+            #okno {
+                width: 70%;
+                height: 40%;
+            }
+        }
+
+        @media (min-width: 558px) and (max-width: 699px) 
+        {
+            #okno 
+            {
+                width: 90%;
+                height: 10%;
+                margin: 10% 0 0 6%;
+            }
+        }
+
+        @media (min-width: 455px) and (max-width: 558px) 
+        {
+            #okno 
+            {
+                width: 90%;
+                height: 13%;
+                margin: 10% 0 0 6%;
+            }
+        }
+
+        @media (min-width: 390px) and (max-width: 455px) 
+        {
+            #okno 
+            {
+                width: 90%;
+                height: 15%;
+                margin: 10% 0 0 6%;
+            }
+        }
+        
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="back">
+            <a href="konstruktor.html">
+                <p class="Tback">ГЛАВНАЯ</p>
+            </a>
+            <img src="img/back.png" class="backI">
+            <a href="katalog.html">
+                <p class="Tback">КАТАЛОГ</p>
+            </a>
+            <img src="img/back.png" class="backI">
+            <a href="korzina.html">
+                <p class="Tback">КОРЗИНА</p>
+            </a>
+            <img src="img/back.png" class="backI">
+                 <p class="Tback">МОИ ЗАКАЗЫ</p>
+        </div>
+    </header>
+    <div id="Container" class="Container">
+        <div class="Con1BLOCK">
+            <p class="ID" id="ID">Номер заказа</p>
+            <p class="Bl1Summa">Сумма</p>
+            <p class="Bl1Date">Дата</p>
+            <p class="Bl1Status">Статус заказа</p>
+            <p class="Bl1Status">Детали заказа</p>
+            <p class="Bl1B">Отменить заказ</p>
+        </div>
+        <div class="tovaryP" id="tovaryP"></div>
+    </div>
+    <div class="blockS">
+        <div id="okno" class="Okno">
+            <h1 class="OKNO">ДЕТАЛИ ЗАКАЗА</h1>
+            <div id="orderDetailsContainer">
+                <!-- Здесь будут отображаться детали заказа -->
+            </div>
+            <a href="#" class="close"><img src="img/close.png" id="closeBut" alt="Закрыть"></a>
+        </div>
+    </div>
+
+    <script>
+        //clearCart(); 
+        const token = localStorage.getItem('token');
+        if (!token) 
+        {
+            localStorage.removeItem('userId');
+        }
+        let userId = localStorage.getItem('userId');
+        if (!userId) 
+        {
+            ocalStorage.removeItem('orderId');
+        }    
+        let orderId = localStorage.getItem('orderId');
+        console.log('Token:', token);
+        console.log('User ID:', userId);
+        console.log('Order ID:', orderId); 
+      
+        console.log('Token:', token);
+        console.log('User ID:', userId);
+       
+        const cartI = $('#orderDiv');
+
+        setTimeout(() => {
+                console.log('Очистка localStorage через 1 час');
+                localStorage.removeItem('token');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('orderId');
+            }, 3600000);
+       function createOrderItem(order) 
+       {
+            if (order.status === 1) 
+            {
+                return null;
+            }
+
+            const orderDiv = $('<div class="order-item"></div>');
+
+            // Добавление ID заказа
+            $('<p class="order-id"></p>').text('ID: ' + order.id).appendTo(orderDiv);
+
+            // Добавление суммы заказа
+            $('<p class="order-summa"></p>').text('Сумма: ' + order.summa.toFixed(2) + ' KZT').appendTo(orderDiv);
+
+            // Добавление даты заказа
+            $('<p class="order-date"></p>').text('Дата: ' + new Date(order.created_at).toLocaleDateString()).appendTo(orderDiv);
+
+            // Добавление статуса заказа
+            $('<p class="order-status"></p>').text('Статус: ' + getStatusText(order.status)).appendTo(orderDiv);
+
+            // Кнопка для просмотра деталей заказа
+            const detailButton = $('<a href="#okno" id="zakaz"><button class="order-button detailOrder">Детали заказа</button></a>');
+            detailButton.data('id', order.id);
+            detailButton.click(async function () 
+            {
+                const orderId = $(this).data('id');
+                try 
+                {
+                    const detailResponse = await fetch(`http://localhost:8080/api/orderDetails/${orderId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                    });
+
+                    if (!detailResponse.ok) 
+                    {
+                        throw new Error(`Ошибка при получении деталей заказа: ${detailResponse.statusText}`);
+                    }
+
+                    const orderDetails = await detailResponse.json();
+
+                    // Получаем информацию о заказе
+                    const orderResponse = await fetch(`http://localhost:8080/api/order/${orderId}`, {
+                        method: 'GET',
+                        headers: 
+                        {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                    });
+
+                    if (!orderResponse.ok) 
+                    {
+                        throw new Error(`Ошибка при получении информации о заказе: ${orderResponse.statusText}`);
+                    }
+
+                    const orderData = await orderResponse.json();
+
+                    // Очистка контейнера деталей заказа
+                    $('#orderDetailsContainer').empty();
+
+                    // Отображение деталей заказа
+                    orderDetails.forEach(detail => {
+                            $('#orderDetailsContainer').append(`
+                            <p class="OKNO">Наименование: ${detail.product_name}</p>
+                            <p class="OKNO">Количество: ${detail.count}</p>
+                            <p class="OKNO">Цена: ${detail.price.toFixed(2)}</p>
+                        `);
+                    });
+
+                    // Отображение общей суммы заказа
+                    $('#orderDetailsContainer').append(`
+                        <p class="OKNO">Итого сумма: ${orderData.summa.toFixed(2)}</p>
+                    `);
+
+                } 
+                catch (error) 
+                {
+                    console.error('Ошибка при получении деталей заказа:', error);
+                }
+            });
+            detailButton.appendTo(orderDiv);
+
+            // Кнопка для отмены заказа
+            const cancelButton = $('<button class="order-button cancelOrder">Отменить заказ</button>');
+            cancelButton.data('id', order.id);
+            if (order.status === 4) 
+            {
+                cancelButton.prop('disabled', true);
+                cancelButton.css({
+                    'background-color': '#d3d3d3', 
+                    'color': '#a9a9a9',            
+                    'cursor': 'not-allowed',       
+                    'pointer-events': 'none'       
+                });
+            }
+
+            cancelButton.click(async function () {
+                const orderId = $(this).data('id');
+                try {
+                    const updateResponse = await fetch(`http://localhost:8080/api/order/${orderId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ status: 4 }) 
+                    });
+
+                    if (!updateResponse.ok) 
+                    {
+                        throw new Error(`Ошибка при обновлении заказа: ${updateResponse.statusText}`);
+                    }
+
+                    console.log(`Заказ ${orderId} успешно обновлен.`);
+                    fetchExistingOrder(); 
+
+                } 
+                catch (error) 
+                {
+                    console.error('Ошибка при отмене заказа:', error);
+                }
+            });
+
+            cancelButton.appendTo(orderDiv);
+
+            return orderDiv; 
+        }
+
+        async function fetchExistingOrder() 
+        {
+            console.log('Запустился fetchExistingOrder - userId:', userId);
+
+            if (!userId) return;
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/orders/${userId}`, 
+                {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) 
+                {
+                    throw new Error(`Ошибка при получении заказов: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                console.log('API Response:', result);
+
+                const orders = Array.isArray(result.orders) ? result.orders : result;
+
+                if (!Array.isArray(orders)) 
+                {
+                    throw new Error('Полученные данные не являются массивом заказов');
+                }
+
+                $('#tovaryP').empty();
+
+                orders.forEach(order => {
+                    const orderElement = createOrderItem(order);
+                    $('#tovaryP').append(orderElement);
+                });
+
+                $('.cancelOrder').on('click', async function () 
+                {
+                    const orderId = $(this).data('id');
+                    try {
+                        const orderResponse = await fetch(`http://localhost:8080/api/order/${orderId}`, 
+                        {
+                            method: 'GET',
+                            headers: 
+                            {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+
+                        if (!orderResponse.ok) 
+                        {
+                            throw new Error(`Ошибка при получении заказа: ${orderResponse.statusText}`);
+                        }
+
+                        const order = await orderResponse.json();
+                        const updatedOrder = { ...order, status: 4 }; 
+
+                        const updateResponse = await fetch(`http://localhost:8080/api/order/${orderId}`, {
+                            method: 'PUT',
+                            headers: 
+                            {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify(updatedOrder)
+                        });
+
+                        if (!updateResponse.ok) 
+                        {
+                            throw new Error(`Ошибка при обновлении заказа: ${updateResponse.statusText}`);
+                        }
+
+                        console.log(`Заказ ${orderId} успешно обновлен.`);
+                        fetchExistingOrder(); 
+
+                    } 
+                    catch (error) 
+                    {
+                        console.error('Ошибка при обработке заказа:', error);
+                    }
+                });
+
+            } catch (error) 
+            {
+                console.error('Ошибка при обработке заказов:', error);
+            }
+        }
+
+        function getStatusText(status) 
+        {
+            switch (status) 
+            {
+                case 1: return 'В корзине';
+                case 2: return 'Оформлен';
+                case 3: return 'Доставлен';
+                case 4: return 'Возврат';
+                default: return 'Неизвестный статус';
+            }
+        }
+
+        $(document).ready(() => {
+            fetchExistingOrder();
+        });
+    </script>
+</body>
+</html>

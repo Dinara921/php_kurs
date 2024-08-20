@@ -11,7 +11,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Inter', sans-serif;
-    background: #f9f5f0;
+    background: #a7b5b8;
 }
 a
 {
@@ -66,17 +66,6 @@ header
     align-items: baseline;
     z-index: 9999;
 }
-.OKNOT 
-{
-    width: 20%;
-    border: 2px solid #87834e52;
-    text-align: center;
-    border-radius: 2px;
-    padding: 1%;
-    background: #87834e27;
-    font-size: 80%;
-}
-
 input[type="button"] 
 {
     margin: 2%;
@@ -89,10 +78,6 @@ input[type="button"]
     font-size: 80%;
 }
 
-.Okno 
-{
-    font-size: 100%;
-}
 .header_t:hover
 {
     font-weight: 500;
