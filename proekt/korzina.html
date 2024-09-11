@@ -8,6 +8,7 @@
   <title>Корзина</title>
   <link rel="stylesheet" href="css/korzina.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <style>
     #okno 
     {
@@ -106,11 +107,13 @@
     {
       background-color: #555;
     }
+
   </style>
 </head>
 
 <body>
   <header>
+    
     <div class="blockMenu">
         <div class="back">
           <a href="konstruktor.html">
@@ -138,6 +141,12 @@
     </div>
     <div class="tovaryP" id="tovaryP"></div>
   </div>
+  <div id="loading"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); align-items: center; justify-content: center; z-index: 1000;">
+    <div style="color: white;">Loading...</div>
+  </div>
+
+
   <div class="blockS">
     <div id="Summa" class="Summa">Итого: 0.00 KZT</div>
     <div id="okno" class="Okno">
@@ -158,6 +167,7 @@
     </div>
     <a href="#okno" class="zakaz" id="zakaz">Оформить заказ</a>
   </div>
+
   <script>
     //clearCart();
       var hours = 1; 
@@ -377,20 +387,20 @@
 
     async function fetchExistingOrder() 
     {
+        showLoading(); 
         console.log('Before saving cart:', JSON.parse(localStorage.getItem('cart')));
         console.log('Запустился fetchExistingOrder - userId:', userId);
 
         if (!userId) return;
 
-        try 
-        {
-          const response = await fetch(`http://localhost:8080/api/orders/${userId}`, {
+        try {
+          const response = await fetch(`http://localhost:8080/api/orders/${userId}`, 
+          {
             method: 'GET',
             headers: { 'Authorization': `Bearer ${token}` }
           });
 
-          if (!response.ok) 
-          {
+          if (!response.ok) {
             throw new Error(`Ошибка при получении заказов: ${response.statusText}`);
           }
 
@@ -423,7 +433,8 @@
               status: 1
             };
 
-            const createOrderResponse = await fetch('http://localhost:8080/api/order', {
+            const createOrderResponse = await fetch('http://localhost:8080/api/order', 
+            {
               method: 'POST',
               headers: 
               {
@@ -441,7 +452,7 @@
             const newOrder = await createOrderResponse.json();
             console.log('Новый заказ создан:', newOrder);
 
-            if (newOrder && newOrder.id) 
+            if (newOrder && newOrder.id)
             {
               orderId = newOrder.id;
               localStorage.setItem('orderId', orderId);
@@ -452,20 +463,23 @@
         catch (error) 
         {
           console.error('Ошибка при обработке заказа:', error);
+        } 
+        finally 
+        {
+          hideLoading(); 
         }
-    }
+      }
 
-    async function fetchOrderDetails(orderId) 
-    {
+      async function fetchOrderDetails(orderId) 
+      {
+        showLoading(); 
         console.log('Before saving cart:', JSON.parse(localStorage.getItem('cart')));
         console.log('Запустился fetchOrderDetails - orderId:', orderId);
         const token = localStorage.getItem('token');
 
-        try 
-        {
+        try {
           const response = await fetch(`http://localhost:8080/api/orderDetails/${orderId}`, {
-            headers: 
-            {
+            headers: {
               'Authorization': `Bearer ${token}`
             }
           });
@@ -497,25 +511,26 @@
         catch (error) 
         {
           console.error('Error fetching order details:', error);
+        } 
+        finally 
+        {
+          hideLoading(); 
         }
-
-        console.log('Local cart items:', JSON.parse(localStorage.getItem('cart')));
   }
 
 
   async function saveCartDetail(orderId, item) 
   {
+      showLoading(); 
       const token = localStorage.getItem('token');
-      const data = 
-      {
+      const data = {
         order_id: orderId,
         product_id: item.product_id,
         count: item.count,
         price: item.price
       };
       try {
-        const response = await fetch('http://localhost:8080/api/orderDetail/checkOnly', 
-        {
+        const response = await fetch('http://localhost:8080/api/orderDetail/checkOnly', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -524,8 +539,7 @@
           body: JSON.stringify(data)
         });
 
-        if (!response.ok) 
-        {
+        if (!response.ok) {
           throw new Error(`Error saving order detail: ${response.statusText}`);
         }
 
@@ -538,8 +552,13 @@
       catch (error) 
       {
         console.error('Error saving order detail:', error);
+      } 
+      finally 
+      {
+        hideLoading(); 
       }
     }
+
 
     $(document).ready(async function () 
     {
@@ -547,20 +566,6 @@
         {
           updateCartDisplay();
         }
-        // if (token && userId) 
-        // {      
-        //   const tokenResponse = await fetch('http://localhost:8080/api/user', 
-        //   {
-        //     method: 'GET',
-        //     headers: { 'Authorization': `Bearer ${token}` }
-        //   });
-        //   if (tokenResponse.ok) 
-        //   {
-        //     const user = await tokenResponse.json();
-        //     userId = user.id;
-        //     localStorage.setItem('userId', userId);
-        //   }
-        // }
         if (userId) 
         {
             $('#loading').show();
@@ -628,7 +633,7 @@
 
           if (password.length < 8) 
           {
-            console.error('Пароль должен содержать не менее 8 символов');
+            alert('Пароль должен содержать не менее 8 символов');
             return;
           }
 
@@ -644,7 +649,8 @@
           }
 
           try {
-            let response = await fetch('http://localhost:8080/api/registerAndOrder', {
+            let response = await fetch('http://localhost:8080/api/registerAndOrder', 
+            {
               method: 'POST',
               headers: 
               {
@@ -665,16 +671,30 @@
              {
               const errorData = await response.json();
 
-              if (response.status === 422 && errorData.errors) 
-              {
-                let errorMessage = 'Такой пользователь уже существует';
-                alert(errorMessage);
-              } 
-              else 
-              {
-                console.error('Ошибка при оформлении заказа:', errorData);
-                alert(`Ошибка: ${errorData.error || response.statusText}`);
-              }
+             if (response.status === 422 && errorData.errors) 
+             {
+                 let errorMessages = Object.values(errorData.errors).flat();
+                 if (errorMessages == "The email has already been taken.") 
+                 {
+                    alert("Пользователь существует");
+                 }
+                 else if(errorMessages == "The cart items field is required.")
+                 {
+                    alert("Корзина пуста");
+                 } 
+                 else if (errorMessages == "The email has already been taken.,The cart items field is required.") 
+                 {
+                   alert("Пользователь существует и корзина пуста");
+                 }
+                 else
+                    alert(errorMessages);
+             } 
+            else 
+            {
+                 console.error('Ошибка при оформлении заказа:', errorData);
+                 alert(`Ошибка: ${errorData.error || response.statusText}`);
+            }
+
 
               throw new Error(`Ошибка: ${response.statusText}`);
             }
@@ -706,7 +726,7 @@
           Summa.text('Итого: ' + 0.00 + ' KZT');
           clearCart();
           console.log('Заказ оформлен'); 
-          
+          $('#myZ').hide();
         } 
         catch (error) 
         {
@@ -763,6 +783,17 @@
         }
       }
     });
+
+  function showLoading() 
+  {
+    document.getElementById('loading').style.display = 'flex';
+  }
+
+  function hideLoading() 
+  {
+    document.getElementById('loading').style.display = 'none';
+  }
+
   </script>
 </body>
 </html>

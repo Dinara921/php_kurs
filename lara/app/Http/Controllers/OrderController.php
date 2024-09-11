@@ -25,5 +25,4 @@ class OrderController extends BaseController
 
         return response()->json(['orders' => $orders], 200);
     }
-
 }

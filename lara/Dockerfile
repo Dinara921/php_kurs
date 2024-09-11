@@ -38,3 +38,5 @@ RUN composer config --global process-timeout 3600 \
 
 # Устанавливаем рабочую директорию
 WORKDIR /var/www/html
+
+

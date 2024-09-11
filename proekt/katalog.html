@@ -8,6 +8,7 @@
        <title>Каталог</title>
        <link rel="stylesheet" href="css/katalog.css">
        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+       <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
        <style>
               #okno 
               {
@@ -175,58 +176,50 @@
 
        <script>
            $(document).ready(function () {
-                     function fetchProducts(url) 
-                     {
+                     function fetchProducts(url) {
                             $('#loading').show();
-                            $.ajax({
-                                   url: url,
-                                   method: 'GET',
-                                   dataType: 'json',
-                                   success: function (data) {
+                            axios.get(url)
+                                   .then(function (response) {
                                           $('#loading').hide();
+                                          let data = response.data;
                                           let html = '';
                                           if (data.length === 0) {
                                                  html = '<p>Нет товаров</p>';
                                           } else {
                                                  $.each(data, function (index, value) {
-                                                        if(value.count>0)
-                                                        {
-                                                           html += '<div class="Con1BLOCK">' +
-                                                               '<div class="Con1Pokryvalo">' +
-                                                               '<img src = "http://localhost:8080/storage/' + value.img + '" id="imgT" class="Con1Img" alt="">' +
-                                                               '<div class="CPT1">' +
-                                                               '<p class="aft">' + value.overview + '</p>' +
-                                                               '</div>' +
-                                                               '</div>' +
-                                                               '<p class="Con1Text1 name1">' + value.name + '</p>' +
-                                                               '<p class="Con1Text2 price1">' + value.price + '</p>' +
-                                                               '<button class="designB1 Con1Text3" data-id="' + value.id + '" data-name="' + value.name + '" data-price="' + value.price + '">Добавить в корзину</button>' +
-                                                               '<button class="designB2 reviewsButton" data-id="' + value.id + '">Отзывы</button>' + 
-                                                               '</div>';
-                                                           console.log(value.id);
+                                                        if (value.count > 0) {
+                                                               html += '<div class="Con1BLOCK">' +
+                                                                      '<div class="Con1Pokryvalo">' +
+                                                                      '<img src = "http://localhost:8080/storage/' + value.img + '" id="imgT" class="Con1Img" alt="">' +
+                                                                      '<div class="CPT1">' +
+                                                                      '<p class="aft">' + value.overview + '</p>' +
+                                                                      '</div>' +
+                                                                      '</div>' +
+                                                                      '<p class="Con1Text1 name1">' + value.name + '</p>' +
+                                                                      '<p class="Con1Text2 price1">' + value.price + '</p>' +
+                                                                      '<button class="designB1 Con1Text3" data-id="' + value.id + '" data-name="' + value.name + '" data-price="' + value.price + '">Добавить в корзину</button>' +
+                                                                      '<button class="designB2 reviewsButton" data-id="' + value.id + '">Отзывы</button>' +
+                                                                      '</div>';
+                                                               console.log(value.id);
                                                         }
                                                  });
                                           }
                                           $("#products").html(html);
-                                   },
-                                   error: function () 
-                                   {
+                                   })
+                                   .catch(function () {
                                           $('#loading').hide();
                                           $("#products").html('<p>Ошибка при загрузке данных</p>');
-                                   }
-                            });
+                                   });
                      }
 
-                     function updateCartIcon() 
-                     {
+                     function updateCartIcon() {
                             const cart = JSON.parse(localStorage.getItem("cart")) || [];
                             $('#divKorzina').find('span').remove();
                             $('#divKorzina').append(`<span>${cart.length}</span>`);
                             console.log('Cart icon updated. Cart length:', cart.length);
                      }
 
-                     function updateAuthLinks() 
-                     {
+                     function updateAuthLinks() {
                             const token = localStorage.getItem('token');
                             console.log('Token:', token);
                             if (token) {
@@ -239,9 +232,7 @@
                                           updateAuthLinks();
                                    });
                                    getUserData(token);
-                            } 
-                            else 
-                            {
+                            } else {
                                    $('#login-btn').show().off('click').on('click', function () {
                                           $('#okno').show();
                                    });
@@ -249,36 +240,28 @@
                             }
                      }
 
-                     function getUserData(token) 
-                     {
-                         $.ajax({
-                                url: 'http://localhost:8080/api/userId',
-                                method: 'GET',
-                                dataType: 'json',
-                                headers: {
-                                       'Authorization': 'Bearer ' + token
-                                },
-                                data: {
-                                       token: token
-                                },
-                                success: function (response) {
-                                       console.log('User data:', response);
-
-                                       if (response && response.user_id) 
-                                       {
-                                              console.log('User ID:', response.user_id);
-                                              localStorage.setItem('userId', response.user_id);
-                                              handleCart(response.user_id);
-                                       }
-                                       else 
-                                       {
-                                              console.error('No user found with the given token.');
-                                       }
-                                },
-                                error: function (xhr) {
-                                       console.error('Failed to get user data', xhr.responseText);
-                                }
-                         });
+                     function getUserData(token) {
+                            axios.get('http://localhost:8080/api/userId', {
+                                   headers: {
+                                          'Authorization': 'Bearer ' + token
+                                   },
+                                   params: {
+                                          token: token
+                                   }
+                            })
+                                   .then(function (response) {
+                                          console.log('User data:', response.data);
+                                          if (response.data && response.data.user_id) {
+                                                 console.log('User ID:', response.data.user_id);
+                                                 localStorage.setItem('userId', response.data.user_id);
+                                                 handleCart(response.data.user_id);
+                                          } else {
+                                                 console.error('No user found with the given token.');
+                                          }
+                                   })
+                                   .catch(function (error) {
+                                          console.error('Failed to get user data', error.response.data);
+                                   });
                      }
 
                      fetchProducts('http://localhost:8080/api/products');
@@ -310,105 +293,82 @@
                             };
                             let cart = JSON.parse(localStorage.getItem("cart")) || [];
                             const existingItem = cart.find(i => i.id === item.id);
-                            if (existingItem) 
-                            {
-                                existingItem.count += 1;
-                            } 
-                            else 
-                            {
-                                cart.push(item);
+                            if (existingItem) {
+                                   existingItem.count += 1;
+                            } else {
+                                   cart.push(item);
                             }
                             localStorage.setItem("cart", JSON.stringify(cart));
                             updateCartIcon();
                      });
 
-                     $('.close').on('click', function () 
-                     {
+                     $('.close').on('click', function () {
                             $('#okno').hide();
                      });
 
-                     $('#but').on('click', function () 
-                     {
+                     $('#but').on('click', function () {
                             const email = $('#kontakty_email').val();
                             const password = $('#kontakty_password').val();
 
-                            $.ajax({
-                                   url: 'http://localhost:8080/api/login',
-                                   method: 'POST',
-                                   data: {
-                                          email: email,
-                                          password: password
-                                   },
-                                   success: function (response) 
-                                   {
-                                          console.log('Login successful. Token:', response.token);
-                                          localStorage.setItem('token', response.token);
+                            axios.post('http://localhost:8080/api/login', {
+                                   email: email,
+                                   password: password
+                            })
+                                   .then(function (response) {
+                                          console.log('Login successful. Token:', response.data.token);
+                                          localStorage.setItem('token', response.data.token);
                                           $('#okno').hide();
                                           updateAuthLinks();
-                                   },
-                                   error: function () 
-                                   {
+                                   })
+                                   .catch(function () {
                                           alert('Неверный email или пароль');
-                                   }
-                            });
+                                   });
                      });
 
-                     window.addEventListener('storage', function (e) 
-                     {
-                            if (e.key === 'token') 
-                            {
+                     window.addEventListener('storage', function (e) {
+                            if (e.key === 'token') {
                                    console.log('Token changed in another tab:', e.newValue);
                                    updateAuthLinks();
                             }
                      });
-              }); 
 
-                $(document).on('click', '.reviewsButton', function () 
-                {
+                     $(document).on('click', '.reviewsButton', function () {
                             const productId = $(this).data('id');
                             $('#reviewsList').empty();
                             $('#reviewsModal').show();
-                            $.ajax({
-                                   url: `http://localhost:8080/api/reviews/${productId}`,
-                                   method: 'GET',
-                                   dataType: 'json',
-                                   success: function (data) {
+                            axios.get(`http://localhost:8080/api/reviews/${productId}`)
+                                   .then(function (response) {
+                                          let data = response.data;
                                           if (data.length === 0) {
                                                  $('#reviewsList').html('<p>Нет отзывов</p>');
                                           } else {
                                                  let reviewsHtml = '';
-                                                 data.forEach(function (review) 
-                                                 {
+                                                 data.forEach(function (review) {
                                                         reviewsHtml += `<div class="review-item">
-                                                               <p><strong>Пользователь:</strong> ${review.user_id}</p>
-                                                               <p><strong>Оценка:</strong> ${review.grade}/5</p>
-                                                               <p><strong>Комментарий:</strong> ${review.text}</p>
-                                                               <hr>
-                                                               </div>`;
+                            <p><strong>Пользователь:</strong> ${review.user_id}</p>
+                            <p><strong>Оценка:</strong> ${review.grade}/5</p>
+                            <p><strong>Комментарий:</strong> ${review.text}</p>
+                            <hr>
+                        </div>`;
                                                  });
                                                  $('#reviewsList').html(reviewsHtml);
                                           }
-                                   },
-                                   error: function () 
-                                   {
+                                   })
+                                   .catch(function () {
                                           $('#reviewsList').html('<p>Ошибка при загрузке отзывов</p>');
-                                   }
-                            });
+                                   });
                      });
 
-                     $(document).on('click', '.close', function () 
-                     {
+                     $(document).on('click', '.close', function () {
                             $('#reviewsModal').hide();
                      });
 
-                     $(window).on('click', function (event) 
-                     {
-                            if ($(event.target).hasClass('modal')) 
-                            {
+                     $(window).on('click', function (event) {
+                            if ($(event.target).hasClass('modal')) {
                                    $('#reviewsModal').hide();
                             }
-               });
-
+                     });
+              });
        </script>
 </head>
 
